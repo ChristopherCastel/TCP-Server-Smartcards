@@ -1,0 +1,21 @@
+/*
+ * flyweight_factory.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_FLYWEIGHT_FACTORY_H_
+#define TERMINAL_FLYWEIGHT_FACTORY_H_
+
+namespace terminal {
+
+class FlyweightFactory {
+public:
+	FlyweightFactory();
+	virtual ~FlyweightFactory();
+};
+
+} /* namespace terminal */
+
+#endif /* TERMINAL_FLYWEIGHT_FACTORY_H_ */

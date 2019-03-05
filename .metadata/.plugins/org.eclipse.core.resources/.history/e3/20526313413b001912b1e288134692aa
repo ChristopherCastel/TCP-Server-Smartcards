@@ -1,0 +1,23 @@
+/*
+ * pcsc_factory.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_PCSC_FACTORY_H_
+#define TERMINAL_PCSC_FACTORY_H_
+
+#include "base_terminal_factory.h"
+
+namespace terminal {
+
+class PCSCFactory : ITerminalFactory {
+public:
+	PCSCFactory();
+	virtual ~PCSCFactory();
+};
+
+} /* namespace terminal */
+
+#endif /* TERMINAL_PCSC_FACTORY_H_ */

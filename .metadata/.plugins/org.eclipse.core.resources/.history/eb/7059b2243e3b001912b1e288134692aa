@@ -1,0 +1,21 @@
+/*
+ * ifactory.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_IFACTORY_H_
+#define TERMINAL_IFACTORY_H_
+
+namespace client {
+
+class IFactory {
+public:
+	IFactory();
+	virtual ~IFactory();
+};
+
+} /* namespace client */
+
+#endif /* TERMINAL_IFACTORY_H_ */

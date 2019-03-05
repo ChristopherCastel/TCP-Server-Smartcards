@@ -1,0 +1,28 @@
+/*
+ * flyweight_requests.h
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_
+#define SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_
+
+namespace client {
+
+class FlyweightTerminalFactory {
+private:
+	std::map<std::string, ITerminalFactory*> requests;
+public:
+	FlyweightTerminalFactory() {};
+
+	virtual ~FlyweightTerminalFactory() {};
+
+	void addFactory(std::string key, ITerminalFactory* factory);
+
+	ITerminalFactory* getFactory(std::string key);
+};
+
+} /* namespace client */
+
+#endif /* SRC_CLIENT_REQUESTS_FLYWEIGHT_REQUESTS_H_ */

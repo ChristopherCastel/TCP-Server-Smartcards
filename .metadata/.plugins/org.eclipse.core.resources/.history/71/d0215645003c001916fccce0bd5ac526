@@ -1,0 +1,41 @@
+/*
+ * client_api.cpp
+ *
+ *  Created on: 26 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include <atomic>
+#include <fstream>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+
+#include "plog/include/plog/Log.h"
+#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
+
+#include "client_api.h"
+
+namespace client {
+
+ClientAPI::ClientAPI() {
+}
+
+ClientAPI::~ClientAPI() {
+
+}
+
+void ClientAPI::initClient(std::string path, FlyweightFactory cache) {
+	engine.initClient(path, cache);
+}
+
+ResponsePacket ClientAPI::connectClient() {
+	return engine.connectClient();
+}
+
+ResponsePacket ClientAPI::disconnectClient() {
+	return engine.mock();
+}
+
+} /* namespace client */

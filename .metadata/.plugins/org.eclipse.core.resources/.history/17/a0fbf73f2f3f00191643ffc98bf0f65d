@@ -1,0 +1,21 @@
+/*
+ * logger_debug.cpp
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "logger_debug.h"
+#include "plog/include/plog/Log.h"
+
+namespace logger {
+
+void LoggerDebug::log(std::string message) {
+	IF_LOG(plog::debug) {
+		LOG_DEBUG << message;
+		return;
+	}
+	next->log(message);
+}
+
+} /* namespace logger */

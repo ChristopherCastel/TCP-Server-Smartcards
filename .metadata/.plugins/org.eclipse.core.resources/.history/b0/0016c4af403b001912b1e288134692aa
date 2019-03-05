@@ -1,0 +1,21 @@
+/*
+ * ifactory.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "terminal_factory.h"
+
+namespace terminal {
+
+ITerminalFactory::ITerminalFactory() {
+	// TODO Auto-generated constructor stub
+
+}
+
+ITerminalFactory::~ITerminalFactory() {
+	// TODO Auto-generated destructor stub
+}
+
+} /* namespace terminal */

@@ -1,0 +1,13 @@
+/*
+ * logger_debug.cpp
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "logger_debug.h"
+
+namespace client {
+
+
+} /* namespace client */

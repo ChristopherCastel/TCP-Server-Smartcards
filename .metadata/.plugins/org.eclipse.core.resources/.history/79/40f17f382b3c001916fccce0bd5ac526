@@ -1,0 +1,23 @@
+/*
+ * flyweight_requests.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include <map>
+
+#include "flyweight_requests.h"
+#include "request.h"
+
+namespace client {
+
+void FlyweightRequests::addFactory(std::string key, ITerminalFactory* factory) {
+	factories.insert(std::make_pair(key, factory));
+}
+
+ITerminalFactory* FlyweightTerminalFactory::getFactory(std::string key) {
+	return factories.at(key);
+}
+
+} /* namespace client */

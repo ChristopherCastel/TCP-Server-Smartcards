@@ -1,0 +1,15 @@
+/*
+ * echo.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "echo.h"
+
+namespace client {
+
+ResponsePacket run(ITerminalLayer* terminal) {
+	return terminal->diag();
+}
+} /* namespace client */

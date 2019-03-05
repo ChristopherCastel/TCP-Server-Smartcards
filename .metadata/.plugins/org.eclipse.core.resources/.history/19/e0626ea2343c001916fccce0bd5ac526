@@ -1,0 +1,25 @@
+/*
+ * flyweight_requests.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include <map>
+
+#include "flyweight_requests.h"
+#include "request.h"
+#include "../../constants/request_code.h"
+#include "../client_engine.h"
+
+namespace client {
+
+void FlyweightRequests::addRequest(RequestCode key, IRequest* factory, ClientEngine client_engine) {
+	requests.insert(std::make_pair(key, factory));
+}
+
+IRequest* FlyweightRequests::getRequest(RequestCode key) {
+	return requests.at(key);
+}
+
+} /* namespace client */

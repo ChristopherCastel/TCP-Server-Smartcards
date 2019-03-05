@@ -1,0 +1,21 @@
+/*
+ * command.h
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_CLIENT_REQUESTS_COMMAND_H_
+#define SRC_CLIENT_REQUESTS_COMMAND_H_
+
+namespace client {
+
+class Command {
+public:
+	Command();
+	virtual ~Command();
+};
+
+} /* namespace client */
+
+#endif /* SRC_CLIENT_REQUESTS_COMMAND_H_ */

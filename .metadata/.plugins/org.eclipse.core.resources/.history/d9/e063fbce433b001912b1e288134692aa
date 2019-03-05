@@ -1,0 +1,31 @@
+/*
+ * terminal_layer.h
+ *
+ *  Created on: 26 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_LAYER_H_
+#define TERMINAL_LAYER_H_
+
+#include "response_packet.h"
+using namespace responses;
+
+namespace terminal {
+
+class ITerminalLayer {
+public:
+	ITerminalLayer();
+
+	virtual ~ITerminalLayer();
+
+	virtual ResponsePacket init();
+
+	virtual ResponsePacket sendCommand(std::string command);
+
+	inline ResponsePacket mock() { ResponsePacket response; return response; }
+};
+
+} /* namespace terminal */
+
+#endif /* TERMINAL_LAYER_H_ */

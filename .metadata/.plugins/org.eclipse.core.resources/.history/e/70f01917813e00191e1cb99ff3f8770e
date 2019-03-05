@@ -1,0 +1,16 @@
+/*
+ * echo.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "echo.h"
+
+namespace client {
+
+ResponsePacket Echo::run(ITerminalLayer* terminal, ClientEngine* client_engine) {
+	return terminal->echo();
+}
+
+} /* namespace client */

@@ -1,0 +1,42 @@
+/*
+ * request_code.h
+ *
+ *  Created on: 22 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_REQUEST_CODE_H_
+#define SRC_REQUEST_CODE_H_
+
+#include <string>
+
+namespace client {
+
+enum RequestCode {
+	CONNECT = 0, DIAG, DISCONNECT, ECHO, INIT_CLIENT, RESTART_TARGET, SEND_COMMAND
+};
+
+inline const std::string requestCodeToString(RequestCode r) {
+	switch (r) {
+	case CONNECT:
+		return "CONNECT";
+	case DIAG:
+		return "DIAG";
+	case DISCONNECT:
+		return "DISCONNECT";
+	case ECHO:
+		return "ECHO";
+	case INIT_CLIENT:
+		return "INIT_CLIENT";
+	case RESTART_TARGET:
+		return "RESTART_TARGET";
+	case SEND_COMMAND:
+		return "SEND_COMMAND";
+	default:
+		return "[Unknown Request Code]";
+	}
+}
+
+} /* namespace client */
+
+#endif /* SRC_REQUEST_CODE_H_ */

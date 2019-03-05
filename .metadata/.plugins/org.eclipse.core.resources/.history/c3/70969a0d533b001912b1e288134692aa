@@ -1,0 +1,33 @@
+/*
+ * flyweight_factory.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_FLYWEIGHT_FACTORY_H_
+#define TERMINAL_FLYWEIGHT_FACTORY_H_
+
+namespace terminal {
+
+#include <map>
+
+#include "factories/terminal_factory.h"
+#include "factories/pcsc_factory.h"
+
+class FlyweightFactory {
+private:
+	// std::map<std::string, ITerminalFactory*> factories;
+public:
+	FlyweightFactory();
+
+	virtual ~FlyweightFactory();
+
+	//void addFactory(ITerminalFactory* factory);
+
+	//ITerminalFactory* getFactory(std::string factory);
+};
+
+} /* namespace terminal */
+
+#endif /* TERMINAL_FLYWEIGHT_FACTORY_H_ */

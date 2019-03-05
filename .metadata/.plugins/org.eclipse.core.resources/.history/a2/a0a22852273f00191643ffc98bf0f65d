@@ -1,0 +1,26 @@
+/*
+ * logger.h
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_LOGGER_LOGGER_H_
+#define SRC_LOGGER_LOGGER_H_
+
+#include <string>
+
+namespace logger {
+
+// singleton
+class Logger {
+public:
+	Logger(Logger logger) {}
+	virtual ~Logger() {}
+	void init(std::string path);
+	virtual void log();
+};
+
+} /* namespace logger */
+
+#endif /* SRC_LOGGER_LOGGER_H_ */

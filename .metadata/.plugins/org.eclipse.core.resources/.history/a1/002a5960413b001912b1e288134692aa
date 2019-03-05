@@ -1,0 +1,17 @@
+/*
+ * terminal_layer.cpp
+ *
+ *  Created on: 26 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "terminal_layer.h"
+#include "plog/include/plog/Log.h"
+
+namespace terminal {
+
+TerminalLayer::TerminalLayer() { }
+
+TerminalLayer::~TerminalLayer() { }
+
+} /* namespace terminal */

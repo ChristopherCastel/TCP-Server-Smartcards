@@ -1,0 +1,21 @@
+/*
+ * echo.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "echo.h"
+
+namespace client {
+
+Echo::Echo() {
+	// TODO Auto-generated constructor stub
+
+}
+
+Echo::~Echo() {
+	// TODO Auto-generated destructor stub
+}
+
+} /* namespace client */

@@ -1,0 +1,21 @@
+/*
+ * flyweight_factory.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "flyweight_factory.h"
+#include "terminals/terminal.h"
+
+namespace client {
+
+void FlyweightFactory::addFactory(ITerminalFactory* factory) {
+
+}
+
+ITerminalFactory* FlyweightFactory::getFactory(std::string factory) {
+
+}
+
+} /* namespace terminal */

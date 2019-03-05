@@ -1,0 +1,21 @@
+/*
+ * flyweight_factory.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "flyweight_factory.h"
+
+namespace client{
+
+FlyweightFactory::FlyweightFactory() {
+	// TODO Auto-generated constructor stub
+
+}
+
+FlyweightFactory::~FlyweightFactory() {
+	// TODO Auto-generated destructor stub
+}
+
+} /* namespace terminal */

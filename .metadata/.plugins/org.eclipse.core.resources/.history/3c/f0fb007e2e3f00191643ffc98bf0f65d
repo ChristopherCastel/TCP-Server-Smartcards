@@ -1,0 +1,28 @@
+/*
+ * logger.cpp
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include <string>
+#include "logger.h"
+#include "plog/include/plog/Log.h"
+#include "plog/include/plog/Appenders/ColorConsoleAppender.h"
+
+namespace logger {
+
+void Logger::init(std::string log_path, std::string log_level) {
+	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+	if (log_level.compare("debug") == 0) {
+		plog::init(plog::debug, log_path.c_str()).addAppender(&consoleAppender);
+	} else {
+		plog::init(plog::info, log_path.c_str()).addAppender(&consoleAppender);
+	}
+}
+
+void Logger::log(std::string message) {
+	next->log();
+}
+
+} /* namespace logger */

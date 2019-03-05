@@ -1,0 +1,25 @@
+/*
+ * logger_debug.h
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_LOGGER_LOGGER_DEBUG_H_
+#define SRC_LOGGER_LOGGER_DEBUG_H_
+
+#include "logger.h"
+#include "logger_info.h"
+
+namespace logger {
+
+class LoggerDebug : public Logger {
+public:
+	LoggerDebug() { next = new LoggerInfo(); }
+	virtual ~LoggerDebug();
+	void log(std::string message);
+};
+
+} /* namespace logger */
+
+#endif /* SRC_LOGGER_LOGGER_DEBUG_H_ */

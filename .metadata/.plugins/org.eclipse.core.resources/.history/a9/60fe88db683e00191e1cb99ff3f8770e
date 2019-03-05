@@ -1,0 +1,17 @@
+/*
+ * errors_pcsc.cpp
+ *
+ *  Created on: 04 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "errors_pcsc.h"
+#include <string>
+
+namespace client {
+
+std::string errorToString(LONG error) {
+
+}
+
+} /* namespace client */

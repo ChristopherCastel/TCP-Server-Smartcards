@@ -1,0 +1,26 @@
+/*
+ * pcsc_factory.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef TERMINAL_PCSC_FACTORY_H_
+#define TERMINAL_PCSC_FACTORY_H_
+
+#include "factory.h"
+
+namespace client {
+
+class PCSCFactory : public ezefef {
+public:
+	PCSCFactory() {};
+
+	~PCSCFactory() {};
+
+	ITerminalLayer* create();
+};
+
+} /* namespace client */
+
+#endif /* TERMINAL_PCSC_FACTORY_H_ */

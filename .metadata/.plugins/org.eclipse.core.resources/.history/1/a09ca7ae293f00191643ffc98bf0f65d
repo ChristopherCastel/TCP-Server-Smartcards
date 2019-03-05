@@ -1,0 +1,28 @@
+/*
+ * logger_info.h
+ *
+ *  Created on: 05 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_LOGGER_LOGGER_INFO_H_
+#define SRC_LOGGER_LOGGER_INFO_H_
+
+#include "logger.h"
+#include "plog/include/plog/Log.h"
+using namespace plog;
+
+namespace client {
+
+class LoggerInfo {
+private:
+	Severity severity = info;
+public:
+	LoggerInfo() {}
+	virtual ~LoggerInfo() {}
+	void log();
+};
+
+} /* namespace client */
+
+#endif /* SRC_LOGGER_LOGGER_INFO_H_ */

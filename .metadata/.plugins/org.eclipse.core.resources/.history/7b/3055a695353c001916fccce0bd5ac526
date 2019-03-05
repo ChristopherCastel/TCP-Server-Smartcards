@@ -1,0 +1,18 @@
+/*
+ * diag.cpp
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#include "diag.h"
+#include "../../client/client_engine.h"
+#include "../../constants/response_packet.h"
+
+namespace client {
+
+ResponsePacket Diag::run(ITerminalLayer* terminal, ClientEngine client_engine) {
+	return terminal->diag();
+}
+
+} /* namespace client */

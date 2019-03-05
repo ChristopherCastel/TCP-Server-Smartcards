@@ -1,0 +1,20 @@
+/*
+ * pcsc_factory.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "pcsc_factory.h"
+#include "../terminals/terminal_layer.h"
+#include "../terminals/pcsc.h"
+
+namespace terminal {
+
+ITerminalLayer* PCSCFactory::create() {
+	return new PCSC();
+}
+
+} /* namespace terminal */
+
+

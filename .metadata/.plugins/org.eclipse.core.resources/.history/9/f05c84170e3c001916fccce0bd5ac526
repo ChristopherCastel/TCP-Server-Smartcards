@@ -1,0 +1,24 @@
+/*
+ * echo.h
+ *
+ *  Created on: 01 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_CLIENT_REQUESTS_ECHO_H_
+#define SRC_CLIENT_REQUESTS_ECHO_H_
+
+#include "../../constants/response_packet.h"
+#include "../../terminal/terminals/terminal.h"
+
+namespace client {
+
+class Echo {
+public:
+	Echo();
+	virtual ~Echo();
+};
+
+} /* namespace client */
+
+#endif /* SRC_CLIENT_REQUESTS_ECHO_H_ */

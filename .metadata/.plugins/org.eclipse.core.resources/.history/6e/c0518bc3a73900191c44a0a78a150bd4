@@ -1,0 +1,61 @@
+/*
+ * engine.h
+ *
+ *  Created on: 22 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_SERVER_ENGINE_H_
+#define SRC_SERVER_ENGINE_H_
+
+#include <atomic>
+#include <list>
+#include <map>
+#include <thread>
+#include <vector>
+#include <winsock2.h>
+
+#include "client_data.h"
+#include "request_code.h"
+#include "response_packet.h"
+
+using namespace responses;
+
+namespace server {
+
+class ServerEngine {
+private:
+	std::string ip;
+	std::string port;
+	int default_timeout;
+	std::map<int, ClientData*> clients_;
+	int next_client_id_ = 0;
+	std::thread connection_thread;;
+protected:
+public:
+	ServerEngine(std::string ip, std::string port, int default_timeout);
+
+	virtual ~ServerEngine();
+
+	ErrorPacket asyncRequest(SOCKET client_socket, std::string to_send, DWORD timeout);
+
+	ErrorPacket cleanupSocket(SOCKET socket);
+
+	ErrorPacket connectionHandshake(SOCKET client_socket);
+
+	ErrorPacket handleConnections(SOCKET listen_socket);
+
+	ErrorPacket handleRequest(int id_client, RequestCode request, std::string data = "", DWORD timeout = 2000);
+
+	std::string listClients();
+
+	ErrorPacket startListening();
+
+	ErrorPacket stopClient(int id_client);
+
+	ErrorPacket stopAllClients();
+};
+
+} /* namespace server */
+
+#endif /* SRC_SERVER_ENGINE_H_ */

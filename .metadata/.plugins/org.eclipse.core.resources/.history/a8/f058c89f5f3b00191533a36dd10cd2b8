@@ -1,0 +1,21 @@
+/*
+ * main.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "client/client_api.h"
+#include "terminal/flyweight_factory.h"
+
+using namespace client;
+
+int __cdecl main(void) {
+
+
+
+	ClientAPI client;
+	client.initClient("./config/init.json");
+	client.connectClient();
+	return 0;
+}

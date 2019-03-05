@@ -1,0 +1,21 @@
+/*
+ * config_wrapper.h
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef SRC_CONFIG_WRAPPER_H_
+#define SRC_CONFIG_WRAPPER_H_
+
+namespace client {
+
+class ConfigWrapper {
+public:
+	ConfigWrapper();
+	virtual ~ConfigWrapper();
+};
+
+} /* namespace client */
+
+#endif /* SRC_CONFIG_WRAPPER_H_ */

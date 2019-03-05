@@ -1,0 +1,21 @@
+/*
+ * pcsc_factory.cpp
+ *
+ *  Created on: 28 Feb 2019
+ *      Author: Castel Christopher
+ */
+
+#include "pcsc_factory.h"
+
+namespace terminal {
+
+PCSCFactory::PCSCFactory() {
+	// TODO Auto-generated constructor stub
+
+}
+
+PCSCFactory::~PCSCFactory() {
+	// TODO Auto-generated destructor stub
+}
+
+} /* namespace terminal */

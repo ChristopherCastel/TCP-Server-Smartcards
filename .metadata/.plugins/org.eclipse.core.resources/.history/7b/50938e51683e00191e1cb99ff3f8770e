@@ -1,0 +1,15 @@
+/*
+ * error.c
+ *
+ *  Created on: 04 Mar 2019
+ *      Author: Castel Christopher
+ */
+
+#ifndef LIBRARIES_PCSCLITE_ERROR_C_
+#define LIBRARIES_PCSCLITE_ERROR_C_
+
+
+
+
+
+#endif /* LIBRARIES_PCSCLITE_ERROR_C_ */
