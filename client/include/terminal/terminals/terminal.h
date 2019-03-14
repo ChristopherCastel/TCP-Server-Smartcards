@@ -41,7 +41,7 @@ public:
 	virtual ResponsePacket connect(int key) = 0;
 
 	/**
-	 * init - initialize the terminal.
+	 * sendCommand - send a command to the terminal.
 	 * @param command the command to be sent to the smartcard.
 	 * @param command_length the length of the given command.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
