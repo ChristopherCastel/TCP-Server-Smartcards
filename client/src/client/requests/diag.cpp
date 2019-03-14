@@ -5,12 +5,12 @@
  *      Author: Castel Christopher
  */
 
-#include "diag.h"
+#include "client/requests/diag.h"
 #include "plog/include/plog/Log.h"
 
 namespace client {
 
-ResponsePacket Diag::run(ITerminalLayer* terminal, ClientEngine* client_engine) {
+ResponsePacket Diag::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) {
 	LOG_INFO << "Request \"diag\" is being processed";
 	return terminal->diag();
 }

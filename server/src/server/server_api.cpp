@@ -27,7 +27,7 @@ ResponsePacket ServerAPI::listClients() {
 }
 
 ResponsePacket ServerAPI::sendCommand(int id_client, std::string command) {
-	return engine.handleRequest(id_client, REQ_COMMAND);
+	return engine.handleRequest(id_client, REQ_COMMAND, command);
 }
 
 ResponsePacket ServerAPI::restartTarget(int id_client) {
@@ -43,8 +43,7 @@ ResponsePacket ServerAPI::diagClient(int id_client) {
 }
 
 ResponsePacket ServerAPI::stopServer() {
-	ResponsePacket response = engine.stopAllClients();
-	return response;
+	return engine.stopAllClients();
 }
 
 }  // namespace server

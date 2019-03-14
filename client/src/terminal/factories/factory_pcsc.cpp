@@ -2,11 +2,11 @@
  * pcsc_factory.cpp
  *
  *  Created on: 28 Feb 2019
- *      Author: Castel Christopher
+ *  Author: Castel Christopher
  */
 
-#include "factory_pcsc.h"
-#include "../terminals/terminal_pcsc.h"
+#include "terminal/factories/factory_pcsc.h"
+#include "terminal/terminals/terminal_pcsc.h"
 
 namespace client {
 

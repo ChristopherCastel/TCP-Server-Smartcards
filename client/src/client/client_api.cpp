@@ -15,20 +15,32 @@
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "client_api.h"
+#include "client/client_api.h"
 
 namespace client {
 
-ResponsePacket ClientAPI::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
-	return engine.initClient(path, available_terminals, available_requests);
+ClientAPI::~ClientAPI() {
+	delete engine;
 }
 
-ResponsePacket ClientAPI::connectClient() {
-	return engine.connectClient();
+ResponsePacket ClientAPI::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
+	return engine->initClient(path, available_terminals, available_requests);
+}
+
+ResponsePacket ClientAPI::connectClient(int terminal_key) {
+	return engine->connectClient(terminal_key);
 }
 
 ResponsePacket ClientAPI::disconnectClient() {
-	return engine.disconnectClient();
+	ResponsePacket response = engine->disconnectClient();
+	if (response.err_client_code == 0) {
+		delete engine;
+	}
+	return response;
+}
+
+ResponsePacket ClientAPI::loadAndListReaders() {
+	return engine->loadAndListReaders();
 }
 
 } /* namespace client */

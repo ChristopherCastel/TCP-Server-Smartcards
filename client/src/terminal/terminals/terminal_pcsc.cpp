@@ -2,32 +2,71 @@
  * pcsc.cpp
  *
  *  Created on: 28 Feb 2019
- *      Author: Castel Christopher
+ *  Author: Castel Christopher
  */
 
 #include <iostream>
 #include <winscard.h>
+#include <map>
 
-#include "terminal_pcsc.h"
+#include "terminal/terminals/terminal_pcsc.h"
+#include "constants/response_packet.h"
+#include "utils/type_converter.h"
 #include "plog/include/plog/Log.h"
-#include "../../constants/response_packet.h"
 
 namespace client {
 
 ResponsePacket TerminalPCSC::init() {
 	ResponsePacket response;
 	LONG resp;
-
 	if ((resp = SCardEstablishContext(SCARD_SCOPE_SYSTEM, NULL, NULL, &hContext)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardEstablishContext() [error:" << errorToString(resp) << "]"
+				  << "[dwScope:" << SCARD_SCOPE_SYSTEM << "][pvReserved1:" << NULL << "][pvReserved1:" << NULL << "][hContext:" << hContext << "]";
 		return handleErrorResponse("Failed to establish context", resp);
 	}
 
+	LOG_INFO << "Terminal PCSC initialized";
+	return response;
+}
+
+ResponsePacket TerminalPCSC::loadAndListReaders() {
+	ResponsePacket response;
+	LONG resp;
+
 	dwReaders = SCARD_AUTOALLOCATE;
 	if ((resp = SCardListReaders(hContext, NULL, (LPTSTR) &mszReaders, &dwReaders)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardListReaders() [error:" << errorToString(resp) << "]"
+				<< "[hContext:" << hContext << "][mszGroups:" << NULL << "][mszReaders:" << mszReaders << "][dwReaders:" << dwReaders << "]";
 		return handleErrorResponse("Failed to list readers", resp);
 	}
 
-	if ((resp = SCardConnect(hContext, mszReaders, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol)) != SCARD_S_SUCCESS) {
+	LPTSTR pReader = mszReaders;
+	std::string list_readers;
+	int i = 0;
+	while ('\0' != *pReader) {
+		LOG_DEBUG << "Loaded reader: " << pReader;
+		list_readers += std::to_string(i) + "|" + std::string((const char*) pReader) + "|";
+		available_readers.insert(std::make_pair(i, pReader));
+		pReader = pReader + strlen((const char*) pReader) + 1;
+		i++;
+	}
+
+	LOG_INFO << "Readers loaded";
+	response.response = list_readers;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::connect(int key) {
+	ResponsePacket response;
+	LONG resp;
+
+	LPCSTR szReader = available_readers.at(key);
+	LOG_INFO << "Trying to connect: " << szReader;
+
+	if ((resp = SCardConnect(hContext, szReader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
+				  << "[hContext:" << hContext << "][szReader:" << szReader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
+				  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard << "][dwActiveProtocol:" << dwActiveProtocol << "]";
 		return handleErrorResponse("Failed to connect", resp);
 	}
 
@@ -41,30 +80,23 @@ ResponsePacket TerminalPCSC::init() {
 		break;
 	}
 
-	dwRecvLength = sizeof(pbRecvBuffer);
-	LOG_INFO << "Terminal PCSC initialized";
-
+	LOG_DEBUG << "Reader connected: " << szReader;
 	return response;
-}
-
-std::string TerminalPCSC::hexToString(unsigned char hex[], DWORD length) {
-	std::string hexString;
-	char buffer[length];
-	for (unsigned long int i = 0; i < length; i++) {
-		sprintf(buffer, "%02X ", hex[i]);
-		hexString.append(buffer);
-	}
-	return hexString;
 }
 
 ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_length) {
 	LONG resp;
+	std::string strCommand = utils::unsignedCharToString(command, command_length);
 
-	LOG_INFO << "Terminal PCSC received APDU command: " << hexToString(command, command_length);
+	LOG_INFO << "Terminal PCSC received APDU command: " << strCommand;
+	dwRecvLength = sizeof(pbRecvBuffer);
 	if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]"
+				  << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
+				  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
 		return handleErrorResponse("Failed to transmit", resp);
 	}
-	std::string responseAPDU =  hexToString(pbRecvBuffer, dwRecvLength);
+	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
 	LOG_INFO << "Terminal PCSC sent APDU response: " << responseAPDU;
 
 	ResponsePacket response = { .response = responseAPDU };
@@ -86,6 +118,8 @@ ResponsePacket TerminalPCSC::diag() {
 	DWORD dwState, dwProtocol;
 
 	if ((resp = SCardStatus(hCard, szReader, &cch, &dwState, &dwProtocol, (LPBYTE) &bAttr, &cByte)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardStatus()  [error:" << errorToString(resp) << "]"
+				  << "[card:" << hCard << "][szReader:" << szReader << "][cch:" << cch << "][dwState:" << dwState << "][dwProtocol:" << dwProtocol << "][bAttr:" << bAttr << "][cByte:" << cByte <<"]";
 		return handleErrorResponse("Failed to retrieve card status", resp);
 	}
 
@@ -140,14 +174,20 @@ ResponsePacket TerminalPCSC::disconnect() {
 	LONG resp;
 
 	if ((resp = SCardDisconnect(hCard, SCARD_LEAVE_CARD)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardDisconnect() "
+				  << "[card:" << hCard << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
 		return handleErrorResponse("Failed to disconnect", resp);
 	}
 
 	if ((resp = SCardFreeMemory(hContext, mszReaders)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardFreeMemory() "
+				  << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
 		return handleErrorResponse("Failed to free memory", resp);
 	}
 
 	if ((resp = SCardReleaseContext(hContext)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardReleaseContext() "
+				  << "[card:" << hCard << "][hContext:" << hContext << "]";
 		return handleErrorResponse("Failed to release context", resp);
 	}
 
@@ -292,7 +332,6 @@ std::string TerminalPCSC::errorToString(LONG error) {
 
 ResponsePacket TerminalPCSC::handleErrorResponse(std::string context_message, LONG error) {
 	std::string message = context_message + ": " + errorToString(error);
-	LOG_DEBUG << message;
 	ResponsePacket response = { .err_terminal_code = error, .err_terminal_description = message };
 	return response;
 }

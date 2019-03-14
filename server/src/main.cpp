@@ -6,16 +6,18 @@
  */
 
 #include "server/server_api.h"
+#include <iostream>
+
 using namespace server;
 
 int __cdecl main(void) {
 	ServerAPI server;
 	server.initServer("./config/init.json");
 	server.startServer();
-	Sleep(6000);
+	Sleep(10000);
 	server.diagClient(1);
 	server.echoClient(1);
-	Sleep(1500);
+	server.sendCommand(1, "00 A4 04 00 00");
 	server.stopServer();
 	return 0;
 }

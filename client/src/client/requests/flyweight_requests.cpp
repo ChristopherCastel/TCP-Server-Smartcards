@@ -6,8 +6,8 @@
  */
 
 #include <map>
-#include "flyweight_requests.h"
-#include "request.h"
+#include "client/requests/flyweight_requests.h"
+#include "client/requests/request.h"
 
 namespace client {
 

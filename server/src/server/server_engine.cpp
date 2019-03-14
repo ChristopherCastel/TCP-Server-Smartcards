@@ -5,13 +5,10 @@
  *      Author: Castel Christopher
  */
 
-// TODO Avoir un objet "strategy" pour chacune des commandes
-// Avec peut-être un trucweight pour les conserver et facilement les appeler via le code de la requête ?
-
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
 
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 1024 * 64
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "66611"
 #define DEFAULT_TIMEOUT "1000" // milliseconds
@@ -37,8 +34,6 @@
 #include "../config/config_wrapper.h"
 #include "../constants/request_code.h"
 #include "../constants/response_packet.h"
-
-using namespace responses;
 
 namespace server {
 
@@ -89,6 +84,8 @@ ResponsePacket ServerEngine::startListening() {
 	retval = getaddrinfo(ip.c_str(), port.c_str(), &hints, &result);
 	if (retval != 0) {
 		WSACleanup();
+		LOG_DEBUG << "Failed to call getaddrinfo() "
+				  << "[ip:" << ip << "][port:" << port << "]";
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Can't resolve server address and port" };
 		return response_packet;
 	}
@@ -96,9 +93,10 @@ ResponsePacket ServerEngine::startListening() {
 	// Create a SOCKET for connecting to server
 	listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (listen_socket == INVALID_SOCKET) {
+		LOG_DEBUG << "Failed to call socket() "
+		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 		freeaddrinfo(result);
 		WSACleanup();
-		LOG_DEBUG << "Socket creation failed with error:" << WSAGetLastError();
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Socket creation failed" };
 		return response_packet;
 	}
@@ -106,10 +104,11 @@ ResponsePacket ServerEngine::startListening() {
 	// Setup the TCP listening socket
 	retval = bind(listen_socket, result->ai_addr, (int) result->ai_addrlen);
 	if (retval == SOCKET_ERROR) {
+		LOG_DEBUG << "Failed to call bind() "
+		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 		freeaddrinfo(result);
 		closesocket(listen_socket);
 		WSACleanup();
-		LOG_DEBUG << "Socket bind failed with error:" << WSAGetLastError();
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Bind failed" };
 		return response_packet;
 	}
@@ -118,9 +117,10 @@ ResponsePacket ServerEngine::startListening() {
 
 	retval = listen(listen_socket, SOMAXCONN);
 	if (retval == SOCKET_ERROR) {
+		LOG_DEBUG << "Failed to call listen() "
+		          << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 		closesocket(listen_socket);
 		WSACleanup();
-		LOG_DEBUG << "Socket listen failed with error:" << WSAGetLastError();
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Listen failed" };
 		return response_packet;
 	}
@@ -148,7 +148,8 @@ ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
 		if (FD_ISSET(listen_socket, &fds)) {
 			client_socket = accept(listen_socket, NULL, NULL);
 			if (client_socket == INVALID_SOCKET) {
-				LOG_DEBUG << "Accept failed with error: " << WSAGetLastError();
+				LOG_DEBUG << "Failed to call accept() "
+				          << "[listen_socket:" << listen_socket << "][WSAError:" << WSAGetLastError() << "]";
 				ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Connection with client failed" };
 				return response_packet;
 			}
@@ -157,6 +158,8 @@ ResponsePacket ServerEngine::handleConnections(SOCKET listen_socket) {
 			// blocks until the timeout has elapsed or the result becomes available.
 			if (fut.wait_for(std::chrono::milliseconds(connection_timeout)) == std::future_status::timeout) {
 				// connection has timed out
+				LOG_DEBUG << "Connection thread with client has elapsed "
+				          << "[client_socket:" << client_socket << "][connection_timeout:" << connection_timeout << "]";
 			} else {
 				fut.get();
 			}
@@ -187,11 +190,11 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 		recvbuf[retval] = '\0';
 		ClientData* client = new ClientData(client_socket, ++next_client_id, recvbuf);
 		clients.insert(std::make_pair(client->getId(), client));
-		LOG_INFO << "Client connected: id = " << client->getId() << ", name = " << client->getName();
+		LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
 		ResponsePacket response_packet;
 		return response_packet;
 	} else {
-		LOG_DEBUG << "Connection reset by peer";
+		LOG_DEBUG << "Failed to receive data from server, connection reset by peer";
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Network error no data received" };
 		return response_packet;
 	}
@@ -199,7 +202,8 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 
 ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, std::string data, DWORD timeout) {
 	if (clients.find(id_client) == clients.end()) {
-		LOG_DEBUG << "Request sent: " << requestCodeToString(request) << " - Client ID: " << id_client << " - Data: " << data;
+		LOG_DEBUG << "Failed to retrieve client "
+		          << "[id_client:" << id_client << "][request:" << requestCodeToString(request) << "]";
 		ResponsePacket response_packet = { .err_server_code = ERR_CLIENT_CLOSED, .err_server_description = "Client closed or not found" };
 		return response_packet;
 	}
@@ -217,7 +221,8 @@ ResponsePacket ServerEngine::handleRequest(int id_client, RequestCode request, s
 	// blocks until the timeout has elapsed or the result becomes available.
 	if (fut.wait_for(std::chrono::milliseconds(timeout)) == std::future_status::timeout) {
 		// thread has timed out
-		LOG_DEBUG << "Response time from client has elapsed";
+		LOG_DEBUG << "Response time from client has elapsed "
+		          << "[client_socket:" << client_socket << "][request:" << j.dump << "[timeout:" << timeout << "]";
 		ResponsePacket response_packet = { .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 		return response_packet;
 	}
@@ -240,11 +245,11 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	retval = recv(client_socket, recvbuf, DEFAULT_BUFLEN, 0);
 	if (retval == SOCKET_ERROR) {
 		if (WSAGetLastError() == WSAETIMEDOUT) {
-			LOG_DEBUG << "Timeout error on receive  [socket " << client_socket << "]";
 			ResponsePacket response_packet = { .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 			return response_packet;
 		} else {
-			LOG_DEBUG << "Network error on receive on [socket " << client_socket << "]";
+			LOG_DEBUG << "Failed to receive data from client "
+					  << "[client_socket:" << client_socket << "][recvbuf:" << recvbuf << "][size:" << DEFAULT_BUFLEN << "][flags:" << NULL << "][WSAError:" << WSAGetLastError() << "]";
 			ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Network error on receive" };
 			return response_packet;
 		}
@@ -258,16 +263,17 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 		ResponsePacket response_packet;
 		return response_packet;
 	} else {
-		LOG_DEBUG << "Client is down on socket " << client_socket;
+		LOG_DEBUG << "Client unreachable "
+				  << "[client_socket:" << client_socket << "]";
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Network error no data received" };
 		return response_packet;
 	}
 }
 
 ResponsePacket ServerEngine::listClients() {
-	std::string output = std::to_string(clients.size());
+	std::string output = "Clients connected: " +  std::to_string(clients.size()) + "|";
 	for (const auto &p : clients) {
-		output += " " + std::to_string(p.first);
+		output += std::to_string(p.second->getId()) + "|" + p.second->getName() + "|";
 	}
 	ResponsePacket response_packet = { .response = output };
 	return response_packet;
@@ -285,7 +291,6 @@ ResponsePacket ServerEngine::stopAllClients() {
 	closesocket(listen_socket);
 	WSACleanup();
 
-
 	ResponsePacket response_packet;
 	return response_packet;
 }
@@ -300,6 +305,8 @@ ResponsePacket ServerEngine::stopClient(int id_client) {
 
 	int retval = shutdown(client_socket, SD_SEND);
 	if (retval == SOCKET_ERROR) {
+		LOG_DEBUG << "Failed to shutdown client "
+				  << "[client_socket:" << client_socket << "][how:" << SD_SEND << "]";
 		ResponsePacket response_packet = { .err_server_code = ERR_NETWORK, .err_server_description = "Client shutdown failed" };
 		return response_packet;
 	}

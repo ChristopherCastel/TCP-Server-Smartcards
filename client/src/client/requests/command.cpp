@@ -7,16 +7,13 @@
 
 #include <winsock2.h>
 #include <windows.h>
-#include "command.h"
+#include "client/requests/command.h"
 #include "plog/include/plog/Log.h"
 
 namespace client {
 
-ResponsePacket Command::run(ITerminalLayer* terminal, ClientEngine* client_engine) {
+ResponsePacket Command::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) {
 	LOG_INFO << "Request \"command\" is being processed";
-	unsigned char command[] = { 0x00 };
-	DWORD command_length = sizeof(command);
-
 	return terminal->sendCommand(command, command_length);
 }
 

@@ -32,8 +32,10 @@ int __cdecl main(void) {
 	available_requests.addRequest(REQ_DISCONNECT, new Disconnect());
 	available_requests.addRequest(REQ_ECHO, new Echo());
 
-	ClientAPI client;
-	client.initClient("./config/init.json", available_terminals, available_requests);
-	client.connectClient();
+//	ClientAPI client;
+//	client.initClient("./config/init.json", available_terminals, available_requests);
+//	ResponsePacket response = client.loadAndListReaders();
+//	LOG_DEBUG << response.response;
+//	client.connectClient(0);
 	return 0;
 }

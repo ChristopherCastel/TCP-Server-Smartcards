@@ -8,7 +8,7 @@
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
 
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 1024 * 64
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "66611"
 #define DEFAULT_NAME "default_name"
@@ -28,25 +28,26 @@
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "client_engine.h"
-#include "../config/config_wrapper.h"
-#include "../constants/request_code.h"
-#include "../constants/response_packet.h"
-#include "../terminal/flyweight_terminal_factory.h"
-#include "../terminal/terminals/terminal.h"
+#include "client/client_engine.h"
+#include "config/config_wrapper.h"
+#include "constants/request_code.h"
+#include "constants/response_packet.h"
+#include "terminal/flyweight_terminal_factory.h"
+#include "terminal/terminals/terminal.h"
+#include "utils/type_converter.h"
 
 namespace client {
 
 ClientEngine::~ClientEngine() {
-	if (initialized) {
+	if (state == CONNECTED) {
 		requests_thread.join();
+		terminal->disconnect();
 	}
 	delete terminal;
 }
 
-ResponsePacket ClientEngine::mock() {
-	ResponsePacket response_packet;
-	return response_packet;
+ResponsePacket ClientEngine::loadAndListReaders() {
+	return terminal->loadAndListReaders();
 }
 
 ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
@@ -70,18 +71,25 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 	ResponsePacket response_packet;
 	response_packet = terminal->init();
 	if (response_packet.err_terminal_code != SUCCESS || response_packet.err_card_code != SUCCESS) {
+		LOG_INFO << "Client unable to be initialized";
 		return response_packet;
 	}
-	initialized = true;
+	state = INITIALIZED;
 
 	LOG_INFO << "Client initialized successfully";
 	return response_packet;
 }
 
-ResponsePacket ClientEngine::connectClient() {
-	if (!initialized) {
-		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly." };
+ResponsePacket ClientEngine::connectClient(int terminal_key) {
+	ResponsePacket response;
+	if (state != INITIALIZED) {
+		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
 		return response_packet;
+	}
+
+	response = terminal->connect(terminal_key);
+	if (response.err_card_code < 0 || response.err_terminal_code < 0) {
+		return response;
 	}
 
 	std::string ip = config.getValue("ip", DEFAULT_IP);
@@ -108,8 +116,9 @@ ResponsePacket ClientEngine::connectClient() {
 	// resolves the server address and port
 	retval = getaddrinfo(ip.c_str(), port.c_str(), &hints, &result);
 	if (retval != 0) {
-		LOG_DEBUG << "Unable to resolve getaddrinfo() on ip " << ip << " and port " << port;
 		WSACleanup();
+		LOG_DEBUG << "Failed to call getaddrinfo() "
+				  << "[ip:" << ip << "][port:" << port << "]";
 		ResponsePacket response_packet = { .err_client_code = ERR_NETWORK, .err_client_description = "Can't resolve server address and port" };
 		return response_packet;
 	}
@@ -118,7 +127,8 @@ ResponsePacket ClientEngine::connectClient() {
 	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 		connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 		if (connect_socket == INVALID_SOCKET) {
-			LOG_DEBUG << "Socket creation failed with error:" << WSAGetLastError();
+			LOG_DEBUG << "Failed to call socket() "
+					  << "[ip:" << ip << "][port:" << port << "][WSAError:" << WSAGetLastError() << "]";
 			ResponsePacket response_packet = { .err_client_code = ERR_NETWORK, .err_client_description = "Socket creation failed" };
 			return response_packet;
 		}
@@ -138,30 +148,31 @@ ResponsePacket ClientEngine::connectClient() {
 
 	if (connect_socket == INVALID_SOCKET) {
 		WSACleanup();
-		LOG_DEBUG << "Client unable to connect to server on ip " << ip << " and port " << port;
+		LOG_DEBUG << "Failed to connect to server "
+				  << "[ip:" << ip << "][port:" << port << "]";
 		ResponsePacket response_packet = { .err_client_code = ERR_NETWORK, .err_client_description = "Can't connect to server" };
 		return response_packet;
 	}
 
+	state = CONNECTED;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
 
 	std::thread thr(&ClientEngine::waitingRequests, this, connect_socket);
 	std::swap(thr, requests_thread);
 
-	ResponsePacket response_packet;
-	return response_packet;
+	return response;
 }
 
 ResponsePacket ClientEngine::disconnectClient() {
-	if (!initialized) {
-		LOG_DEBUG << "Client unable to disconnect - Not initialized yet";
+	if (state != CONNECTED) {
+		LOG_DEBUG << "Client unable to disconnect - Not connected yet";
 		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly." };
 		return response_packet;
 	}
 
 	stop_flag = true;
-	ResponsePacket response = terminal->disconnect();
 	LOG_INFO << "Client disconnected successfully";
+	ResponsePacket response;
 	return response;
 }
 
@@ -179,11 +190,13 @@ ResponsePacket ClientEngine::waitingRequests(SOCKET socket) {
 			LOG_INFO << "Data received from server: " << recvbuf;
 			std::async(std::launch::async, &ClientEngine::handleRequest, this, socket, recvbuf);
 		} else if (retval == 0) {
-			LOG_DEBUG << "Connection reset by peer";
+			LOG_DEBUG << "Failed to receive data from server, connection reset by peer";
 		} else {
-			LOG_DEBUG << "Unable to received request from server on socket " << socket << " failed with error: " << WSAGetLastError();
+			LOG_DEBUG << "Failed to receive data from server "
+					  << "[socket:" << socket << "][recvbuf:" << recvbuf << "][size:" << recvbuflen << "][flags:" << NULL << "][WSAError:" << WSAGetLastError() << "]";
 		}
 	}
+	notifyConnectionLost();
 	LOG_INFO << "Client not waiting for requests";
 
 	ResponsePacket response_packet;
@@ -196,11 +209,14 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 
 	nlohmann::json j = nlohmann::json::parse(request);
 	IRequest* request_handler = requests.getRequest(j["request"]);
-	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal, this);
+	int length;
+	unsigned char* command = utils::stringToUnsignedChar(j["data"].get<std::string>(), &length);
+	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal, this, command, length);
 
 	// blocks until the timeout has elapsed or the result becomes available
 	if (future.wait_for(std::chrono::milliseconds(j["timeout"])) == std::future_status::timeout) {
-		LOG_DEBUG << "Response time from terminal has elapsed. Request was: " << request;
+		LOG_DEBUG << "Response time from terminal has elapsed "
+				  << "[request:" << request << "]";
 		ResponsePacket response_packet = { .err_client_code = ERR_TIMEOUT, .err_client_description = "Request terminal time elapsed" };
 		response = response_packet;
 	} else {
@@ -210,7 +226,8 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 	std::string to_send = response.dump();
 	int retval = send(socket, to_send.c_str(), strlen(to_send.c_str()), 0);
 	if (retval == SOCKET_ERROR) {
-		LOG_DEBUG << "Unable to send data to server on socket: " << socket << "with data: " << to_send.c_str() << " of length: " << strlen(to_send.c_str());
+		LOG_DEBUG << "Failed to send response to server "
+				  << "[socket:" << socket << "][buffer:" << to_send.c_str() << "][size:" << strlen(to_send.c_str()) << "][flags:" << NULL << "]";
 		ResponsePacket response_packet = { .err_client_code = ERR_NETWORK, .err_client_description = "Network error on send response" };
 		return response_packet;
 	}
