@@ -20,12 +20,20 @@
 
 using namespace client;
 
-ADDAPI void setCallback(Callback handler) {
-	Handler = handler;
+ADDAPI void setCallbackConnectionLost(Callback handler) {
+	notifyConnectionLost = handler;
+}
+
+ADDAPI void setCallbackRequestsReceived(Callback handler) {
+	notifyRequestReceived = handler;
+}
+
+ADDAPI void setCallbackResponseSent(Callback handler) {
+	notifyResponseSent = handler;
 }
 
 ADDAPI client::ClientAPI* createClientAPI() {
-	ClientAPI* client = new client::ClientAPI(Handler);
+	ClientAPI* client = new client::ClientAPI(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	return client;
 }
 
@@ -59,8 +67,8 @@ ADDAPI void loadAndListReaders(ClientAPI* client, ResponseDLL& response_packet_d
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-ADDAPI void connectClient(client::ClientAPI* client, int key, ResponseDLL& response_packet_dll) {
-	ResponsePacket response_packet = client->connectClient(key);
+ADDAPI void connectClient(client::ClientAPI* client, int key, const char* ip, const char* port, ResponseDLL& response_packet_dll) {
+	ResponsePacket response_packet = client->connectClient(key, ip, port);
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 

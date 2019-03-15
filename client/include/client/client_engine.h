@@ -21,7 +21,7 @@
 
 namespace client {
 
-typedef void (__stdcall *Callback)();
+typedef void (__stdcall *Callback)(const char* text);
 
 class ClientEngine {
 private:
@@ -32,9 +32,13 @@ private:
 	ITerminalLayer* terminal;
 	FlyweightRequests requests;
 	Callback notifyConnectionLost;
+	Callback notifyRequestReceived;
+	Callback notifyResponseSent;
 public:
-	ClientEngine(Callback handler) {
-		this->notifyConnectionLost = handler;
+	ClientEngine(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
+		this->notifyConnectionLost = notifyConnectionLost;
+		this->notifyRequestReceived = notifyRequestReceived;
+		this->notifyResponseSent = notifyResponseSent;
 	}
 	virtual ~ClientEngine();
 
@@ -60,7 +64,7 @@ public:
 	 * @param terminal_key the key corresponding to a reader.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket connectClient(int terminal_key);
+	ResponsePacket connectClient(int terminal_key, const char* ip, const char* port);
 
 	/**
 	 * disconnectClient - disconnect the cliet from the server and disconnect the terminal.

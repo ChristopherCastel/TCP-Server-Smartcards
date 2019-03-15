@@ -18,6 +18,15 @@ int __cdecl main(void) {
 	server.diagClient(1);
 	server.echoClient(1);
 	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.sendCommand(1, "00 A4 04 00 00");
+	server.echoClient(1);
 	server.stopServer();
 	return 0;
 }

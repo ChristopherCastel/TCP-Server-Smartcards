@@ -16,15 +16,15 @@
 
 namespace client {
 
-typedef void (__stdcall *Callback)();
+typedef void (__stdcall *Callback)(const char* text);
 
 class ClientAPI {
 private:
 	ClientEngine* engine;
 protected:
 public:
-	ClientAPI(Callback handler) {
-		this->engine = new ClientEngine(handler);
+	ClientAPI(Callback notifyConnectionLost, Callback notifyRequestReceived, Callback notifyResponseSent) {
+		this->engine = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	}
 
 	virtual ~ClientAPI();
@@ -51,7 +51,7 @@ public:
 	 * @param terminal_key the key corresponding to a reader.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket connectClient(int terminal_key);
+	ResponsePacket connectClient(int terminal_key, const char* ip, const char* port);
 
 	/**
 	 * disconnectClient - disconnect the cliet from the server and disconnect the terminal.

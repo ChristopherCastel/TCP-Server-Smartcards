@@ -35,7 +35,7 @@ struct ResponseDLL {
 extern "C" {
 #endif
 
-client::Callback Handler = 0;
+client::Callback notifyConnectionLost = 0;
 
 ADDAPI void setCallback(client::Callback handler);
 ADDAPI client::ClientAPI* createClientAPI();

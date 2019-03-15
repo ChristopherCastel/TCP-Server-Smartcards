@@ -81,7 +81,7 @@ ResponsePacket ClientEngine::loadAndListReaders() {
 	return terminal->loadAndListReaders();
 }
 
-ResponsePacket ClientEngine::connectClient(int terminal_key) {
+ResponsePacket ClientEngine::connectClient(int terminal_key, const char* ip, const char* port) {
 	ResponsePacket response;
 	if (!initialized.load()) {
 		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
@@ -98,8 +98,6 @@ ResponsePacket ClientEngine::connectClient(int terminal_key) {
 		return response;
 	}
 
-	std::string ip = config.getValue("ip", DEFAULT_IP);
-	std::string port = config.getValue("port", DEFAULT_PORT);
 	std::string name = config.getValue("name", DEFAULT_NAME);
 
 	LOG_INFO << "Client trying to connect on IP " << ip << " port " << port;
@@ -120,7 +118,7 @@ ResponsePacket ClientEngine::connectClient(int terminal_key) {
 	hints.ai_protocol = IPPROTO_TCP;
 
 	// resolves the server address and port
-	retval = getaddrinfo(ip.c_str(), port.c_str(), &hints, &result);
+	retval = getaddrinfo(ip, port, &hints, &result);
 	if (retval != 0) {
 		WSACleanup();
 		LOG_DEBUG << "Failed to call getaddrinfo() "
@@ -192,6 +190,7 @@ ResponsePacket ClientEngine::waitingRequests(SOCKET socket) {
 	// receives until the server closes the connection
 	while (connected.load()) {
 		int retval = recv(socket, recvbuf, recvbuflen, 0); // recv json request
+		notifyRequestReceived(recvbuf);
 		if (retval > 0) {
 			recvbuf[retval] = '\0';
 			LOG_INFO << "Data received from server: " << recvbuf;
@@ -204,7 +203,7 @@ ResponsePacket ClientEngine::waitingRequests(SOCKET socket) {
 		}
 	}
 	LOG_INFO << "Client not waiting for requests";
-	notifyConnectionLost();
+	notifyConnectionLost("End of connection");
 
 	ResponsePacket response_packet;
 	return response_packet;
@@ -232,6 +231,7 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 
 	std::string to_send = response.dump();
 	int retval = send(socket, to_send.c_str(), strlen(to_send.c_str()), 0);
+	notifyResponseSent(to_send.c_str());
 	if (retval == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to send response to server "
 				  << "[socket:" << socket << "][buffer:" << to_send.c_str() << "][size:" << strlen(to_send.c_str()) << "][flags:" << NULL << "]";
