@@ -18,6 +18,6 @@ int main(int argc, char** argv) {
 	initClient(client, resp);
 	loadAndListReaders(client, resp);
 	connectClient(client, 0, resp);
-	disposeClientAPI(client);
+	disconnectClient(client, resp);
 	return 0;
 }

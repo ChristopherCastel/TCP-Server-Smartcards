@@ -32,11 +32,7 @@ ResponsePacket ClientAPI::connectClient(int terminal_key) {
 }
 
 ResponsePacket ClientAPI::disconnectClient() {
-	ResponsePacket response = engine->disconnectClient();
-	if (response.err_client_code == 0) {
-		delete engine;
-	}
-	return response;
+	return engine->disconnectClient();
 }
 
 ResponsePacket ClientAPI::loadAndListReaders() {

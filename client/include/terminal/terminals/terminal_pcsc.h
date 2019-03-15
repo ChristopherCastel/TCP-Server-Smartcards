@@ -29,7 +29,7 @@ private:
 	std::map<int, LPCSTR> available_readers;
 public:
 	TerminalPCSC() {};
-	~TerminalPCSC() {};
+	~TerminalPCSC();
 	ResponsePacket init();
 	ResponsePacket loadAndListReaders();
 	ResponsePacket connect(int key);

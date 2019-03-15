@@ -39,15 +39,7 @@
 namespace client {
 
 ClientEngine::~ClientEngine() {
-	if (state == CONNECTED) {
-		requests_thread.join();
-		terminal->disconnect();
-	}
 	delete terminal;
-}
-
-ResponsePacket ClientEngine::loadAndListReaders() {
-	return terminal->loadAndListReaders();
 }
 
 ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
@@ -74,16 +66,30 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 		LOG_INFO << "Client unable to be initialized";
 		return response_packet;
 	}
-	state = INITIALIZED;
+	initialized = true;
 
 	LOG_INFO << "Client initialized successfully";
 	return response_packet;
 }
 
+ResponsePacket ClientEngine::loadAndListReaders() {
+	ResponsePacket response;
+	if (!initialized.load()) {
+		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
+		return response_packet;
+	}
+	return terminal->loadAndListReaders();
+}
+
 ResponsePacket ClientEngine::connectClient(int terminal_key) {
 	ResponsePacket response;
-	if (state != INITIALIZED) {
+	if (!initialized.load()) {
 		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
+		return response_packet;
+	}
+
+	if (connected.load()) {
+		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client is already connected" };
 		return response_packet;
 	}
 
@@ -154,23 +160,24 @@ ResponsePacket ClientEngine::connectClient(int terminal_key) {
 		return response_packet;
 	}
 
-	state = CONNECTED;
+	connected = true;
 	LOG_INFO << "Client connected on IP " << ip << " port " << port;
 
 	std::thread thr(&ClientEngine::waitingRequests, this, connect_socket);
-	std::swap(thr, requests_thread);
+	thr.detach();
 
 	return response;
 }
 
 ResponsePacket ClientEngine::disconnectClient() {
-	if (state != CONNECTED) {
+	if (!connected.load()) {
 		LOG_DEBUG << "Client unable to disconnect - Not connected yet";
 		ResponsePacket response_packet = { .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly." };
 		return response_packet;
 	}
 
-	stop_flag = true;
+	connected = false;
+	terminal->disconnect();
 	LOG_INFO << "Client disconnected successfully";
 	ResponsePacket response;
 	return response;
@@ -183,21 +190,21 @@ ResponsePacket ClientEngine::waitingRequests(SOCKET socket) {
 	LOG_INFO << "Client ready to process incoming requests";
 
 	// receives until the server closes the connection
-	while (!stop_flag.load()) {
+	while (connected.load()) {
 		int retval = recv(socket, recvbuf, recvbuflen, 0); // recv json request
 		if (retval > 0) {
 			recvbuf[retval] = '\0';
 			LOG_INFO << "Data received from server: " << recvbuf;
 			std::async(std::launch::async, &ClientEngine::handleRequest, this, socket, recvbuf);
-		} else if (retval == 0) {
-			LOG_DEBUG << "Failed to receive data from server, connection reset by peer";
-		} else {
+		} else if (retval <= 0) {
+			connected = false;
+			terminal->disconnect();
 			LOG_DEBUG << "Failed to receive data from server "
 					  << "[socket:" << socket << "][recvbuf:" << recvbuf << "][size:" << recvbuflen << "][flags:" << NULL << "][WSAError:" << WSAGetLastError() << "]";
 		}
 	}
-	notifyConnectionLost();
 	LOG_INFO << "Client not waiting for requests";
+	notifyConnectionLost();
 
 	ResponsePacket response_packet;
 	return response_packet;
@@ -236,8 +243,8 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 	return response_packet;
 }
 
-void ClientEngine::setStopFlag(bool stop_flag) {
-	this->stop_flag = stop_flag;
+void ClientEngine::setConnectedFlag(bool stop_flag) {
+	this->connected = stop_flag;
 }
 
 } /* namespace client */

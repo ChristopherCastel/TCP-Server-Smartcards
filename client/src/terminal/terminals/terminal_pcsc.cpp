@@ -16,6 +16,16 @@
 
 namespace client {
 
+TerminalPCSC::~TerminalPCSC() {
+	if (SCardFreeMemory(hContext, mszReaders) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
+	}
+
+	if (SCardReleaseContext(hContext) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardReleaseContext() " << "[card:" << hCard << "][hContext:" << hContext << "]";
+	}
+}
+
 ResponsePacket TerminalPCSC::init() {
 	ResponsePacket response;
 	LONG resp;
@@ -177,18 +187,6 @@ ResponsePacket TerminalPCSC::disconnect() {
 		LOG_DEBUG << "Failed to call SCardDisconnect() "
 				  << "[card:" << hCard << "][dwDisposition:" << SCARD_LEAVE_CARD << "]";
 		return handleErrorResponse("Failed to disconnect", resp);
-	}
-
-	if ((resp = SCardFreeMemory(hContext, mszReaders)) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardFreeMemory() "
-				  << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
-		return handleErrorResponse("Failed to free memory", resp);
-	}
-
-	if ((resp = SCardReleaseContext(hContext)) != SCARD_S_SUCCESS) {
-		LOG_DEBUG << "Failed to call SCardReleaseContext() "
-				  << "[card:" << hCard << "][hContext:" << hContext << "]";
-		return handleErrorResponse("Failed to release context", resp);
 	}
 
 	LOG_INFO << "Terminal PCSC disconnected successfully";

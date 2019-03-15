@@ -22,14 +22,13 @@
 namespace client {
 
 typedef void (__stdcall *Callback)();
-enum State { NONE, INITIALIZED, CONNECTED };
 
 class ClientEngine {
 private:
 	ConfigWrapper& config = ConfigWrapper::getInstance();
 	std::thread requests_thread;
-	std::atomic<bool> stop_flag { false };
-	State state = NONE;
+	std::atomic<bool> connected { false };
+	std::atomic<bool> initialized { false };
 	ITerminalLayer* terminal;
 	FlyweightRequests requests;
 	Callback notifyConnectionLost;
@@ -89,7 +88,7 @@ public:
 	 * setStopFlag - set the flag used to stop (or not) waiting for requests.
 	 * @param stop_flag the new value of the stop flag.
 	 */
-	void setStopFlag(bool stop_flag);
+	void setConnectedFlag(bool stop_flag);
 };
 
 } /* namespace client */

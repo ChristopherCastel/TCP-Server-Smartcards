@@ -13,7 +13,7 @@ namespace client {
 
 ResponsePacket Disconnect::run(ITerminalLayer* terminal, ClientEngine* client_engine, char unsigned command[], DWORD command_length) {
 	LOG_INFO << "Request \"disconnect\" is being processed";
-	client_engine->setStopFlag(true);
+	client_engine->setConnectedFlag(false);
 	return terminal->disconnect();
 }
 
