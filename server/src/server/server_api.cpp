@@ -7,15 +7,17 @@
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "server_api.h"
-#include "server_engine.h"
-#include "../constants/request_code.h"
-#include "../constants/response_packet.h"
+#include "server/server_api.h"
+#include "server/server_engine.h"
+#include "constants/request_code.h"
+#include "constants/response_packet.h"
 
 namespace server {
 
 ResponsePacket ServerAPI::initServer(std::string path) {
-	return engine.initServer(path);
+	ResponsePacket resp = engine.initServer(path);
+	LOG_DEBUG << "Hey ??";
+	return resp;
 }
 
 ResponsePacket ServerAPI::startServer() {
@@ -40,6 +42,10 @@ ResponsePacket ServerAPI::echoClient(int id_client) {
 
 ResponsePacket ServerAPI::diagClient(int id_client) {
 	return engine.handleRequest(id_client, REQ_DIAG);
+}
+
+ResponsePacket ServerAPI::stopClient(int id_client) {
+	return engine.handleRequest(id_client, REQ_DISCONNECT);
 }
 
 ResponsePacket ServerAPI::stopServer() {

@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "config_wrapper.h"
+#include "config/config_wrapper.h"
 #include "nlohmann/json.hpp"
 
 namespace server {

@@ -29,11 +29,11 @@
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
 
-#include "client_data.h"
-#include "server_engine.h"
-#include "../config/config_wrapper.h"
-#include "../constants/request_code.h"
-#include "../constants/response_packet.h"
+#include "server/client_data.h"
+#include "server/server_engine.h"
+#include "config/config_wrapper.h"
+#include "constants/request_code.h"
+#include "constants/response_packet.h"
 
 namespace server {
 
