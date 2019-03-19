@@ -7,7 +7,6 @@
 			<item value="org.eclipse.cdt.ui.newCWizards"/>
 			<item value="org.eclipse.linuxtools.rpm.ui.editor"/>
 			<item value="org.eclipse.linuxtools.tmf.ui.wizards.new"/>
-			<item value="org.eclipse.ui.Examples"/>
 		</list>
 	</section>
 	<section name="BasicNewProjectResourceWizard">

@@ -2,7 +2,7 @@
  * ClientData.cpp
  *
  *  Created on: 20 Feb 2019
- *      Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #include "server/client_data.h"

@@ -2,7 +2,7 @@
  * error_packet.h
  *
  *  Created on: 25 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide client and server error code and a struct defining the response format of all function of the application.
  */
 

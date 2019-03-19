@@ -2,7 +2,7 @@
  * ClientData.h
  *
  *  Created on: 20 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide a class wrapping the client's data.
  */
 

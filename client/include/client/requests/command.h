@@ -2,7 +2,7 @@
  * command.h
  *
  *  Created on: 01 Mar 2019
- *      Author: Castel Christopher
+ *      Author: STMicroelectronics
  */
 
 #ifndef SRC_CLIENT_REQUESTS_COMMAND_H_

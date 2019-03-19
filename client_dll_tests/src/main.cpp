@@ -2,7 +2,7 @@
  * main.cpp
  *
  *  Created on: 08 Mar 2019
- *   Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #include <stdio.h>

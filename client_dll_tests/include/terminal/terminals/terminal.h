@@ -2,7 +2,7 @@
  * terminal_layer.h
  *
  *  Created on: 26 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Interface for implementing terminal layers such as PCSC.
  */
 

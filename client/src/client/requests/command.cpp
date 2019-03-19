@@ -2,7 +2,7 @@
  * command.cpp
  *
  *  Created on: 01 Mar 2019
- *      Author: Castel Christopher
+ *      Author: STMicroelectronics
  */
 
 #include <winsock2.h>

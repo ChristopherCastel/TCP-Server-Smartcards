@@ -2,7 +2,7 @@
  * string_hex_converter.h
  *
  *  Created on: 05 Mar 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Used to convert unsigned char* to string and vice versa.
  *  By example:
  *  unsigned char bytes[] = { 0x0F, 0xFF, 0x44, 0x4A } <===> std::string s = "0F FF 44 4A"

@@ -2,7 +2,7 @@
  * server.h
  *
  *  Created on: 13 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide an API for interacting with the server and its clients.
  */
 

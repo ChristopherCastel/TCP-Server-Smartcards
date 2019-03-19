@@ -2,7 +2,7 @@
  * terminal_factory.h
  *
  *  Created on: 28 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Interface for implementing the factories.
  *  It is an implementation of the factory pattern.
  */

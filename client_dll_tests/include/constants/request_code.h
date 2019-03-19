@@ -2,7 +2,7 @@
  * request_code.h
  *
  *  Created on: 22 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide available request's code and a way to convert them to a string description.
  */
 

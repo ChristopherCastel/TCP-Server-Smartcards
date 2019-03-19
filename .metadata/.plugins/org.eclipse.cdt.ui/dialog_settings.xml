@@ -9,7 +9,7 @@
 	<item value="0" key="org.eclipse.cdt.uiformatter_page.white_space.c_view.inner"/>
 	<item value="5" key="formatter_page.modify_dialog_tab_page.last_focus_index"/>
 	<item value="1" key="org.eclipse.cdt.uiformatter_page.line_wrapping_tab_page.last_category_index"/>
-	<item value=" _WIN32_WINNT" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
+	<item value="ADD_EXPORTS" key="org.eclipse.cdt.utils.ui.controls.FileListControl"/>
 	<item value="1117" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_width"/>
 	<item value="876" key="org.eclipse.cdt.uiformatter_pagemodify_dialog.preferred_height"/>
 	<item value="70" key="org.eclipse.cdt.ui.codeformatter.line_wrapping_tab_page.preview_line_width"/>
@@ -39,6 +39,8 @@
 		<item value="client" key="namespace"/>
 		<item value="false" key="testFileSelected"/>
 		<item value="true" key="stubSelected0"/>
+	</section>
+	<section name="PDOMSearchPage">
 	</section>
 	<section name="RenameInformationPopup">
 	</section>

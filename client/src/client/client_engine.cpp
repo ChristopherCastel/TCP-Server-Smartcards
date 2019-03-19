@@ -2,7 +2,7 @@
  * client_engine.cpp
  *
  *  Created on: 26 Feb 2019
- *      Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #define _WIN32_WINNT 0x501

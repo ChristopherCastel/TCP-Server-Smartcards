@@ -2,7 +2,7 @@
  * dll_client_api_wrapper.cpp
  *
  *  Created on: 08 Mar 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #include "server/server_api.h"

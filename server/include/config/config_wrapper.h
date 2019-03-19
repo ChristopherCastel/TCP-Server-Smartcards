@@ -2,7 +2,7 @@
  * config_wrapper.h
  *
  *  Created on: 28 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Wrapper for the configuration file.
  */
 

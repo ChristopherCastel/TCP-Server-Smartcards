@@ -2,7 +2,7 @@
  * client_api.h
  *
  *  Created on: 26 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide an API for interacting with the client.
  */
 

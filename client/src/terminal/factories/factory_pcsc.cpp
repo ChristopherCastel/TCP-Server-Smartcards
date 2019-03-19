@@ -2,7 +2,7 @@
  * pcsc_factory.cpp
  *
  *  Created on: 28 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #include "terminal/factories/factory_pcsc.h"

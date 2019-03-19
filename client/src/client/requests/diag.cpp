@@ -2,7 +2,7 @@
  * diag.cpp
  *
  *  Created on: 01 Mar 2019
- *      Author: Castel Christopher
+ *      Author: STMicroelectronics
  */
 
 #include "client/requests/diag.h"

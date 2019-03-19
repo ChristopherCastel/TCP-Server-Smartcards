@@ -2,7 +2,7 @@
  * flyweight_factory.h
  *
  *  Created on: 28 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Retrieve the right terminal factory at runtime according to the given terminal implementation set in the configuration file.
  *  It is an implementation of the flyweight pattern.
  */

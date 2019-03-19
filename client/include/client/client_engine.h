@@ -2,7 +2,7 @@
  * client_engine.h
  *
  *  Created on: 26 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Provide all mechanisms (threading, timeouts, socket communication,...) required to implement the API.
  */
 

@@ -2,7 +2,7 @@
  * client_api.cpp
  *
  *  Created on: 26 Feb 2019
- *      Author: Castel Christopher
+ *  Author: STMicroelectronics
  */
 
 #include <atomic>

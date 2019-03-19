@@ -2,7 +2,7 @@
  * pcsc_factory.h
  *
  *  Created on: 28 Feb 2019
- *  Author: Castel Christopher
+ *  Author: STMicroelectronics
  *  Purpose: Subclass of ITerminalFactory for PCSC implementation.
  */
 
