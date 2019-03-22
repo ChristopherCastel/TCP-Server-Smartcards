@@ -56,6 +56,7 @@ inline void to_json(nlohmann::json& j, const ResponsePacket& e) {
 // https://github.com/nlohmann/json#arbitrary-types-conversions
 // Used to convert the json.
 inline void from_json(const nlohmann::json& j, ResponsePacket& e) {
+	j.at("response").get_to(e.response);
 	j.at("err_server_code").get_to(e.err_server_code);
 	j.at("err_server_description").get_to(e.err_server_description);
 	j.at("err_client_code").get_to(e.err_client_code);

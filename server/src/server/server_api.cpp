@@ -15,41 +15,40 @@
 namespace server {
 
 ResponsePacket ServerAPI::initServer(std::string path) {
-	ResponsePacket resp = engine.initServer(path);
-	LOG_DEBUG << "Hey ??";
+	ResponsePacket resp = engine->initServer(path);
 	return resp;
 }
 
 ResponsePacket ServerAPI::startServer() {
-	return engine.startListening();
+	return engine->startListening();
 }
 
 ResponsePacket ServerAPI::listClients() {
-	return engine.listClients();
+	return engine->listClients();
 }
 
 ResponsePacket ServerAPI::sendCommand(int id_client, std::string command) {
-	return engine.handleRequest(id_client, REQ_COMMAND, command);
+	return engine->handleRequest(id_client, REQ_COMMAND, command);
 }
 
 ResponsePacket ServerAPI::restartTarget(int id_client) {
-	return engine.handleRequest(id_client, REQ_RESTART);
+	return engine->handleRequest(id_client, REQ_RESTART);
 }
 
 ResponsePacket ServerAPI::echoClient(int id_client) {
-	return engine.handleRequest(id_client, REQ_ECHO);
+	return engine->handleRequest(id_client, REQ_ECHO);
 }
 
 ResponsePacket ServerAPI::diagClient(int id_client) {
-	return engine.handleRequest(id_client, REQ_DIAG);
+	return engine->handleRequest(id_client, REQ_DIAG);
 }
 
 ResponsePacket ServerAPI::stopClient(int id_client) {
-	return engine.handleRequest(id_client, REQ_DISCONNECT);
+	return engine->handleRequest(id_client, REQ_DISCONNECT);
 }
 
 ResponsePacket ServerAPI::stopServer() {
-	return engine.stopAllClients();
+	return engine->stopAllClients();
 }
 
 }  // namespace server

@@ -15,12 +15,17 @@
 
 namespace server {
 
+typedef void (__stdcall *Callback)(int id_client, const char* name_client);
+
 class ServerAPI {
 private:
-	ServerEngine engine;
+	ServerEngine* engine;
 protected:
 public:
-	ServerAPI() {}
+	ServerAPI(Callback notifyConnectionAccepted) {
+		this->engine = new ServerEngine(notifyConnectionAccepted);
+	}
+
 	virtual ~ServerAPI() {}
 
 	/**
@@ -63,10 +68,10 @@ public:
 	ResponsePacket diagClient(int id_client);
 
 	/**
-	 * sendCommand - return a ResponsePacket containing the target's response in the "response" field.
+	 * sendCommand - return a ResponsePacket struct containing the target's response in the "response" field.
 	 * @param id_client
 	 * @param command the command that will be send to the given target.
-	 * @return a ResponsePacket struct containing either the target's response or error codes and error descriptions in case of error.
+	 * @return a ResponsePacket struct containing either the target's response or error codes (value under 0) and error descriptions in case of error.
 	 */
 	ResponsePacket sendCommand(int id_client, std::string command);
 

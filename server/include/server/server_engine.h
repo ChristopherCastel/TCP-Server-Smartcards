@@ -21,6 +21,8 @@
 
 namespace server {
 
+typedef void (__stdcall *Callback)(int id_client, const char* name_client);
+
 class ServerEngine {
 private:
 	ConfigWrapper& config = ConfigWrapper::getInstance();
@@ -29,9 +31,13 @@ private:
 	std::map<int, ClientData*> clients;
 	SOCKET listen_socket = INVALID_SOCKET;
 	int next_client_id = 0;
+	Callback notifyConnectionAccepted;
 protected:
 public:
-	ServerEngine() {}
+	ServerEngine(Callback notifyConnectionAccepted) {
+		this->notifyConnectionAccepted = notifyConnectionAccepted;
+	}
+
 	virtual ~ServerEngine() {}
 
 	/**

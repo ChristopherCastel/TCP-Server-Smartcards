@@ -21,7 +21,7 @@ enum ErrorCode {
 
 /**
  * ResponsePacket struct used as a response of all function calls.
- * By default all error field are set to "SUCCESS" and description to "OK".
+ * By default all error fields are set to "SUCCESS" and description fields to "OK".
  * In case of error, the responsible layer must set the adequate error code and a description.
  * The response field is only valid if there is no negative error code.
  */
@@ -56,6 +56,7 @@ inline void to_json(nlohmann::json& j, const ResponsePacket& e) {
 // https://github.com/nlohmann/json#arbitrary-types-conversions
 // Used to convert the json.
 inline void from_json(const nlohmann::json& j, ResponsePacket& e) {
+	j.at("response").get_to(e.response);
 	j.at("err_server_code").get_to(e.err_server_code);
 	j.at("err_server_description").get_to(e.err_server_description);
 	j.at("err_client_code").get_to(e.err_client_code);

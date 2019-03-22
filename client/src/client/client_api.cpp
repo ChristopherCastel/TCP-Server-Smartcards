@@ -19,10 +19,6 @@
 
 namespace client {
 
-ClientAPI::~ClientAPI() {
-	delete engine;
-}
-
 ResponsePacket ClientAPI::initClient(std::string path, FlyweightTerminalFactory available_terminals, FlyweightRequests available_requests) {
 	return engine->initClient(path, available_terminals, available_requests);
 }

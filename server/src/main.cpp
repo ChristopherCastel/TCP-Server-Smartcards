@@ -11,22 +11,22 @@
 using namespace server;
 
 int __cdecl main(void) {
-	ServerAPI server;
-	server.initServer("./config/init.json");
-	server.startServer();
-	Sleep(10000);
-	server.diagClient(1);
-	server.echoClient(1);
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.sendCommand(1, "00 A4 04 00 00");
-	server.echoClient(1);
-	server.stopServer();
+//	ServerAPI server;
+//	server.initServer("./config/init.json");
+//	server.startServer();
+//	Sleep(10000);
+//	server.diagClient(1);
+//	server.echoClient(1);
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.sendCommand(1, "00 A4 04 00 00");
+//	server.echoClient(1);
+//	server.stopServer();
 	return 0;
 }

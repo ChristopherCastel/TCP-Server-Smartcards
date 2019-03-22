@@ -27,7 +27,9 @@ public:
 		this->engine = new ClientEngine(notifyConnectionLost, notifyRequestReceived, notifyResponseSent);
 	}
 
-	virtual ~ClientAPI();
+	virtual ~ClientAPI() {
+		delete engine;
+	}
 
 	/**
 	 * initClient - initialize the client with the given configuration file.
@@ -54,7 +56,7 @@ public:
 	ResponsePacket connectClient(int terminal_key, const char* ip, const char* port);
 
 	/**
-	 * disconnectClient - disconnect the cliet from the server and disconnect the terminal.
+	 * disconnectClient - disconnect the client from the server and disconnect the terminal.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket disconnectClient();

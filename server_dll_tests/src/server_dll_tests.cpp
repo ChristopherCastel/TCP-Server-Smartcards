@@ -6,19 +6,9 @@
 using namespace server;
 
 int main() {
-	ServerAPI* server = createServerAPI();
-	ResponseDLL resp;
-	initServer(server, resp);
-	printf("%s\n", resp.response);
-	printf("%d\n", resp.err_server_code);
-	printf("%s\n", resp.err_server_description);
-	printf("%d\n", resp.err_client_code);
-	printf("%s\n", resp.err_client_description);
-	printf("%d\n", resp.err_terminal_code);
-	printf("%s\n", resp.err_terminal_description);
-	printf("%d\n", resp.err_card_code);
-	printf("%s\n", resp.err_card_description);
-
-	startServer(server, resp);
+//	ServerAPI* server = createServerAPI();
+//	ResponseDLL resp;
+//	initServer(server, resp);
+//	startServer(server, resp);
 	return 0;
 }

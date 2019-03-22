@@ -2,7 +2,7 @@
  * echo.cpp
  *
  *  Created on: 01 Mar 2019
- *      Author: STMicroelectronics
+ *  Author: STMicroelectronics
  */
 
 #include "client/requests/echo.h"

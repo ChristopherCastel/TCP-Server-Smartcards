@@ -25,6 +25,15 @@ namespace utils {
  * @return the unsigned char* data.
  */
 inline unsigned char* stringToUnsignedChar(std::string data, int* length) {
+	long unsigned int i = 1;
+	while (i < data.length()) { // 00000000 => 00 00 00 00
+		if (i % 3  == 0 && data.at(i) == ' ') {
+			data.erase(i);
+		} else {
+			i++;
+		}
+	}
+
 	std::istringstream hex_chars_stream(data);
 	std::vector<unsigned char> bytes;
 	unsigned int c;

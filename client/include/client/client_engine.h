@@ -26,6 +26,7 @@ typedef void (__stdcall *Callback)(const char* text);
 class ClientEngine {
 private:
 	ConfigWrapper& config = ConfigWrapper::getInstance();
+	SOCKET client_socket;
 	std::thread requests_thread;
 	std::atomic<bool> connected { false };
 	std::atomic<bool> initialized { false };
@@ -74,10 +75,9 @@ public:
 
 	/**
 	 * waitingRequests - wait for requests on the given socket by using the helper function handleRequest.
-	 * @param socket the socket from which the client receive data.
 	 * @return a ResponsePacket struct containing either the request's response or error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket waitingRequests(SOCKET socket);
+	ResponsePacket waitingRequests();
 
 	/**
 	 * handleRequest - helper function that performs async actions according to the given request.

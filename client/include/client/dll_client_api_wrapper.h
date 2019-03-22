@@ -2,7 +2,7 @@
  * dll_client_api_wrapper.h
  *
  *  Created on: 08 Mar 2019
- *      Author: STMicroelectronics
+ *  Author: STMicroelectronics
  */
 
 #ifdef ADD_EXPORTS

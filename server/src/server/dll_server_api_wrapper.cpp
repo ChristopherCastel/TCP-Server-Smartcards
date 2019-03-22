@@ -14,8 +14,12 @@
 using namespace server;
 
 ADDAPI server::ServerAPI* createServerAPI() {
-	ServerAPI* server = new ServerAPI();
+	ServerAPI* server = new ServerAPI(notifyConnectionAccepted);
 	return server;
+}
+
+ADDAPI void setCallbackConnectionAccepted(Callback handler) {
+	notifyConnectionAccepted = handler;
 }
 
 ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet) {
@@ -59,7 +63,7 @@ ADDAPI void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& re
 }
 
 ADDAPI void stopServer(server::ServerAPI* server, ResponseDLL& response_packet) {
-	ResponsePacket response = server->startServer();
+	ResponsePacket response = server->stopServer();
 	responsePacketForDll(response, response_packet);
 }
 

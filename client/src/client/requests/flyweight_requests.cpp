@@ -2,7 +2,7 @@
  * flyweight_requests.cpp
  *
  *  Created on: 01 Mar 2019
- *      Author: STMicroelectronics
+ *  Author: STMicroelectronics
  */
 
 #include <map>

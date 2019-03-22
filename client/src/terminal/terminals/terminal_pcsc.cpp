@@ -11,7 +11,7 @@
 
 #include "terminal/terminals/terminal_pcsc.h"
 #include "constants/response_packet.h"
-#include "utils/type_converter.h"
+#include "terminal/terminals/utils/type_converter.h"
 #include "plog/include/plog/Log.h"
 
 namespace client {
@@ -330,7 +330,7 @@ std::string TerminalPCSC::errorToString(LONG error) {
 
 ResponsePacket TerminalPCSC::handleErrorResponse(std::string context_message, LONG error) {
 	std::string message = context_message + ": " + errorToString(error);
-	ResponsePacket response = { .err_terminal_code = error, .err_terminal_description = message };
+	ResponsePacket response = { .response = "KO", .err_terminal_code = error, .err_terminal_description = message };
 	return response;
 }
 
