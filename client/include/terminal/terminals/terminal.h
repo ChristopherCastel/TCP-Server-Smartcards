@@ -1,10 +1,19 @@
-/*
- * terminal_layer.h
- *
- *  Created on: 26 Feb 2019
- *  Author: STMicroelectronics
- *  Purpose: Interface for implementing terminal layers such as PCSC.
- */
+/*********************************************************************************
+ Copyright 2017 GlobalPlatform, Inc.
+
+ Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*********************************************************************************/
 
 #ifndef TERMINAL_LAYER_H_
 #define TERMINAL_LAYER_H_
@@ -46,7 +55,7 @@ public:
 	 * @param command_length the length of the given command.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
-	virtual ResponsePacket sendCommand(unsigned char command[], DWORD command_length) = 0;
+	virtual ResponsePacket sendCommand(unsigned char command[],  unsigned long int command_length) = 0;
 
 	/**
 	 * diag - diagnose the used terminal.
@@ -67,6 +76,12 @@ public:
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket isAlive() = 0;
+
+	/**
+	 * restart - restart the TOE.
+	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket restart() = 0;
 };
 
 } /* namespace client */

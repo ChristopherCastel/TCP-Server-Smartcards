@@ -1,9 +1,19 @@
-/*
- * client_engine.cpp
- *
- *  Created on: 26 Feb 2019
- *  Author: STMicroelectronics
- */
+/*********************************************************************************
+ Copyright 2017 GlobalPlatform, Inc.
+
+ Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*********************************************************************************/
 
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
@@ -145,6 +155,7 @@ ResponsePacket ClientEngine::connectClient(int terminal_key, const char* ip, con
 			continue;
 		}
 		send(this->client_socket, name.c_str(), strlen(name.c_str()), 0);
+		Sleep(1000);
 		break;
 	}
 
@@ -216,7 +227,7 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 
 	nlohmann::json j = nlohmann::json::parse(request);
 	IRequest* request_handler = requests.getRequest(j["request"]);
-	int length;
+	unsigned long int length;
 	unsigned char* command = utils::stringToUnsignedChar(j["data"].get<std::string>(), &length);
 	std::future<ResponsePacket> future = std::async(std::launch::async, &IRequest::run, request_handler, terminal, this, command, length);
 

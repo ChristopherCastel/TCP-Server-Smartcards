@@ -1,9 +1,19 @@
 /*
- * engine.cpp
- *
- *  Created on: 22 Feb 2019
- *      Author: STMicroelectronics
- */
+ Copyright 2017 GlobalPlatform, Inc.
+
+ Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*/
 
 #define _WIN32_WINNT 0x501
 #define WIN32_LEAN_AND_MEAN
@@ -239,15 +249,13 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 		return response_packet;
 	}
 
-	// waits for response from client
 	char recvbuf[DEFAULT_BUFLEN];
 
-	DWORD tm = 1000;
-	setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char*) &tm, sizeof(tm));
+	setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeout, sizeof(tm));
 	retval = recv(client_socket, recvbuf, DEFAULT_BUFLEN, 0);
 	if (retval == SOCKET_ERROR) {
 		if (WSAGetLastError() == WSAETIMEDOUT) {
-			ResponsePacket response_packet = { .err_server_code = ERR_TIMEOUT, .err_server_description = "!!!!!!!!!Request time elapsed" };
+			ResponsePacket response_packet = { .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 			return response_packet;
 		} else {
 			LOG_DEBUG << "Failed to receive data from client "

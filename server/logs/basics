@@ -1257,3 +1257,6 @@
 2019-03-18 10:37:36.592 DEBUG [11852] [server::ServerEngine::handleRequest@205] Failed to retrieve client [id_client:1][request:REQ_ECHO]
 2019-03-18 11:09:57.405 INFO  [6020] [server::ServerEngine::initServer@54] Server launched
 2019-03-18 11:09:57.405 INFO  [6020] [server::ServerEngine::startListening@63] Start listening
+2019-03-26 08:57:37.877 INFO  [2884] [server::ServerEngine::initServer@54] Server launched
+2019-03-26 08:57:37.880 INFO  [2884] [server::ServerEngine::startListening@63] Start listening
+2019-03-26 08:57:37.883 DEBUG [2884] [server::ServerEngine::startListening@107] Failed to call bind() [ip:127.0.0.1][port:62111][WSAError:10048]

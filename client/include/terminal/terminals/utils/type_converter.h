@@ -1,12 +1,19 @@
-/*
- * string_hex_converter.h
- *
- *  Created on: 05 Mar 2019
- *  Author: STMicroelectronics
- *  Purpose: Used to convert unsigned char* to string and vice versa.
- *  By example:
- *  unsigned char bytes[] = { 0x0F, 0xFF, 0x44, 0x4A } <===> std::string s = "0F FF 44 4A"
- */
+/*********************************************************************************
+ Copyright 2017 GlobalPlatform, Inc.
+
+ Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*********************************************************************************/
 
 #ifndef UTILS_TYPE_CONVERTER_H_
 #define UTILS_TYPE_CONVERTER_H_
@@ -14,6 +21,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "plog/include/plog/Log.h"
 
 namespace utils {
 
@@ -24,25 +33,34 @@ namespace utils {
  * @param length to outputed length of the unsigned char* result.
  * @return the unsigned char* data.
  */
-inline unsigned char* stringToUnsignedChar(std::string data, int* length) {
-	long unsigned int i = 1;
-	while (i < data.length()) { // 00000000 => 00 00 00 00
-		if (i % 3  == 0 && data.at(i) == ' ') {
-			data.erase(i);
-		} else {
-			i++;
+inline unsigned char* stringToUnsignedChar(std::string data, unsigned long int* length) {
+	LOG_ERROR << "DATA = " << data;
+	data.erase(remove_if(data.begin(), data.end(), isspace), data.end()); // remove spaces
+
+	std::stringstream ss;
+	for (unsigned long int i = 0; i < data.length(); i++) {
+		if (i != 0 && i % 2 == 0) {
+			ss << " ";
 		}
+		ss << data[i];
 	}
+	data = ss.str();
+	LOG_ERROR << "DATA = " << data;
+
 
 	std::istringstream hex_chars_stream(data);
 	std::vector<unsigned char> bytes;
 	unsigned int c;
+	int i = 0;
 	while (hex_chars_stream >> std::hex >> c) {
 		bytes.push_back(c);
+		i++;
 	}
-	unsigned char* result = &bytes.front();
+
+	unsigned char* ustr = new unsigned char[bytes.size()];
+	std::copy(bytes.begin(), bytes.end(), ustr);
 	*length = bytes.size();
-	return result;
+	return ustr;
 }
 
 /**

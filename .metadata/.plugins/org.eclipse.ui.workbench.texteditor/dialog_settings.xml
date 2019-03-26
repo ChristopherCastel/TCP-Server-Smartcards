@@ -2,12 +2,15 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="isRegEx"/>
-		<item value="request" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+)+/"/>
+			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+){2}*/"/>
+			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+)*/"/>
 			<item value="requests_t"/>
 			<item value="request"/>
 			<item value="forma"/>
@@ -20,11 +23,10 @@
 			<item value="reset"/>
 			<item value="timeout"/>
 			<item value="data re"/>
-			<item value="Data rec"/>
-			<item value="data  rec"/>
-			<item value="request re"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
+			<item value=" "/>
 			<item value="case $1:\r\nreturn \&quot;$2\&quot;;"/>
 			<item value="$1:\r\nreturn \&quot;$2\&quot;;"/>
 			<item value="return \&quot;$1\&quot;;"/>
@@ -32,8 +34,6 @@
 			<item value="return &quot;$1&quot;;"/>
 			<item value="$1"/>
 			<item value="case SCARD"/>
-			<item value=" "/>
-			<item value=""/>
 			<item value="server."/>
 			<item value="engine."/>
 			<item value="engine-&gt;"/>
@@ -43,10 +43,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="284" key="DIALOG_WIDTH"/>
+		<item value="375" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="389" key="DIALOG_HEIGHT"/>
+		<item value="409" key="DIALOG_HEIGHT"/>
 		<item value="1425" key="DIALOG_X_ORIGIN"/>
-		<item value="329" key="DIALOG_Y_ORIGIN"/>
+		<item value="309" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

@@ -1,9 +1,19 @@
-/*
- * pcsc.cpp
- *
- *  Created on: 28 Feb 2019
- *  Author: STMicroelectronics
- */
+/*********************************************************************************
+ Copyright 2017 GlobalPlatform, Inc.
+
+ Licensed under the GlobalPlatform/Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and%20Rules%20for%20the%20SE%20IP%20connector.docx
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*********************************************************************************/
 
 #include <iostream>
 #include <winscard.h>
@@ -98,7 +108,6 @@ ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_
 	LONG resp;
 	std::string strCommand = utils::unsignedCharToString(command, command_length);
 
-	LOG_INFO << "Terminal PCSC received APDU command: " << strCommand;
 	dwRecvLength = sizeof(pbRecvBuffer);
 	if ((resp = SCardTransmit(hCard, &pioSendPci, command, command_length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]"
@@ -107,7 +116,6 @@ ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_
 		return handleErrorResponse("Failed to transmit", resp);
 	}
 	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
-	LOG_INFO << "Terminal PCSC sent APDU response: " << responseAPDU;
 
 	ResponsePacket response = { .response = responseAPDU };
 	return response;
@@ -190,6 +198,29 @@ ResponsePacket TerminalPCSC::disconnect() {
 	}
 
 	LOG_INFO << "Terminal PCSC disconnected successfully";
+	return response;
+}
+
+ResponsePacket TerminalPCSC::restart() {
+	ResponsePacket response;
+	LONG resp;
+	DWORD dwProtocol;
+
+	if ((resp = SCardReconnect(hCard, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, SCARD_LEAVE_CARD, &dwProtocol)) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardReconnect() "
+				  << "[hContext:" << hContext << "][[dwShareMode:" << SCARD_SHARE_SHARED << "]"
+				  << "[dwActiveProtocol:" << dwActiveProtocol << "]";
+	}
+
+	switch (dwActiveProtocol) {
+	case SCARD_PROTOCOL_T0:
+		pioSendPci = *SCARD_PCI_T0;
+		break;
+	case SCARD_PROTOCOL_T1:
+		pioSendPci = *SCARD_PCI_T1;
+		break;
+	}
+
 	return response;
 }
 
