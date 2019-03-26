@@ -48,6 +48,18 @@ ResponsePacket ServerAPI::sendCommand(int id_client, std::string command) {
 	return engine->handleRequest(id_client, REQ_COMMAND, command);
 }
 
+ResponsePacket ServerAPI::sendTypeA(int id_client, std::string command) {
+	return engine->handleRequest(id_client, REQ_COMMAND_A, command);
+}
+
+ResponsePacket ServerAPI::sendTypeB(int id_client, std::string command) {
+	return engine->handleRequest(id_client, REQ_COMMAND_B, command);
+}
+
+ResponsePacket ServerAPI::sendTypeF(int id_client, std::string command) {
+	return engine->handleRequest(id_client, REQ_COMMAND_F, command);
+}
+
 ResponsePacket ServerAPI::restartTarget(int id_client) {
 	return engine->handleRequest(id_client, REQ_RESTART);
 }
@@ -67,6 +79,22 @@ ResponsePacket ServerAPI::stopClient(int id_client) {
 		return okResponse;
 	}
 	return response;
+}
+
+ResponsePacket ServerAPI::coldReset(int id_client) {
+	return engine->handleRequest(id_client, REQ_COLD_RESET);
+}
+
+ResponsePacket ServerAPI::warmReset(int id_client) {
+	return engine->handleRequest(id_client, REQ_WARM_RESET);
+}
+
+ResponsePacket ServerAPI::powerOFFField(int id_client) {
+	return engine->handleRequest(id_client, REQ_POWER_OFF_FIELD);
+}
+
+ResponsePacket ServerAPI::powerONField(int id_client) {
+	return engine->handleRequest(id_client, REQ_POWER_ON_FIELD);
 }
 
 ResponsePacket ServerAPI::stopServer() {

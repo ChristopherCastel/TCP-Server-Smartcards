@@ -44,13 +44,19 @@ public:
 	ResponsePacket loadAndListReaders();
 	ResponsePacket connect(int key);
 	ResponsePacket sendCommand(unsigned char command[], unsigned long int command_length);
+	ResponsePacket sendTypeA(unsigned char command[],  unsigned long int command_length);
+	ResponsePacket sendTypeB(unsigned char command[],  unsigned long int command_length);
+	ResponsePacket sendTypeF(unsigned char command[],  unsigned long int command_length);
 	ResponsePacket diag();
 	ResponsePacket disconnect();
 	ResponsePacket isAlive();
 	ResponsePacket restart();
-	std::string errorToString(LONG error);
+	ResponsePacket coldReset();
+	ResponsePacket warmReset();
+	ResponsePacket powerOFFField();
+	ResponsePacket powerONField();
 	ResponsePacket handleErrorResponse(std::string context_message, LONG error);
-	std::string hexToString(unsigned char hex[], DWORD length);
+	std::string errorToString(LONG error);
 };
 
 } /* namespace client */

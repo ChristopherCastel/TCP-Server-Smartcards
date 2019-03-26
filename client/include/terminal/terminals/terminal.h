@@ -50,12 +50,36 @@ public:
 	virtual ResponsePacket connect(int key) = 0;
 
 	/**
-	 * sendCommand - send a command to the terminal.
+	 * sendCommand - send an APDU command to the terminal.
 	 * @param command the command to be sent to the smartcard.
 	 * @param command_length the length of the given command.
 	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
 	 */
 	virtual ResponsePacket sendCommand(unsigned char command[],  unsigned long int command_length) = 0;
+
+	/**
+	 * sendTypeA - send an APDU command over RF Type A
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	virtual ResponsePacket sendTypeA(unsigned char command[],  unsigned long int command_length) = 0;
+
+	/**
+	 * sendTypeB - send an APDU command over RF Type B
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	virtual ResponsePacket sendTypeB(unsigned char command[],  unsigned long int command_length) = 0;
+
+	/**
+	 * sendTypeF - send an APDU command over RF Type F
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	virtual ResponsePacket sendTypeF(unsigned char command[],  unsigned long int command_length) = 0;
 
 	/**
 	 * diag - diagnose the used terminal.
@@ -82,6 +106,30 @@ public:
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	virtual ResponsePacket restart() = 0;
+
+	/**
+	 * coldReset - perform power off power on and return atr in the response structure.
+	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
+	 */
+	virtual ResponsePacket coldReset() = 0;
+
+	/**
+	 * coldReset - perform the reset without power switch and return atr in the response structure.
+	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
+	 */
+	virtual ResponsePacket warmReset() = 0;
+
+	/**
+	 * powerOFFField - set the field OFF
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket powerOFFField() = 0;
+
+	/**
+	 * powerONField - set the field ON
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	virtual ResponsePacket powerONField() = 0;
 };
 
 } /* namespace client */

@@ -52,13 +52,15 @@ client::Callback notifyResponseSent = 0;
 ADDAPI void setCallbackConnectionLost(client::Callback handler);
 ADDAPI void setCallbackRequestsReceived(client::Callback handler);
 ADDAPI void setCallbackResponseSent(client::Callback handler);
+
 ADDAPI client::ClientAPI* createClientAPI();
+ADDAPI void connectClient(client::ClientAPI* client, int key, const char* ip, const char* port, ResponseDLL& response_packet);
 ADDAPI void disconnectClient(client::ClientAPI* client, ResponseDLL& response_packet_dll);
+void responsePacketForDll(client::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
+
 ADDAPI void disposeClientAPI(client::ClientAPI* client);
 ADDAPI void initClient(client::ClientAPI* client, ResponseDLL& response_packet);
 ADDAPI void loadAndListReaders(client::ClientAPI*, ResponseDLL& response_packet);
-ADDAPI void connectClient(client::ClientAPI* client, int key, const char* ip, const char* port, ResponseDLL& response_packet);
-void responsePacketForDll(client::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
 
 #ifdef __cplusplus
 }

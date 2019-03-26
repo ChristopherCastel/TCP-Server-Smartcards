@@ -44,18 +44,27 @@ extern "C" {
 server::Callback notifyConnectionAccepted = 0;
 
 ADDAPI void setCallbackConnectionAccepted(server::Callback handler);
+
 ADDAPI server::ServerAPI* createServerAPI();
+ADDAPI void disposeServerAPI(server::ServerAPI* server);
+void responsePacketForDll(server::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
+
 ADDAPI void initServer(server::ServerAPI* server, ResponseDLL& response_packet);
 ADDAPI void startServer(server::ServerAPI* server, ResponseDLL& response_packet);
 ADDAPI void listClients(server::ServerAPI* server, ResponseDLL& response_packet);
 ADDAPI void echoClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
 ADDAPI void diagClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
 ADDAPI void sendCommand(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet);
+ADDAPI void sendTypeA(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet);
+ADDAPI void sendTypeB(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet);
+ADDAPI void sendTypeF(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet);
 ADDAPI void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
 ADDAPI void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void coldReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void warmReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void powerOFFField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
+ADDAPI void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet);
 ADDAPI void stopServer(server::ServerAPI* server, ResponseDLL& response_packet);
-ADDAPI void disposeServerAPI(server::ServerAPI* server);
-void responsePacketForDll(server::ResponsePacket response_packet, ResponseDLL& response_packet_dll);
 
 #ifdef __cplusplus
 }

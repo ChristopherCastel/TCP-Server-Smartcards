@@ -62,6 +62,21 @@ ADDAPI void sendCommand(server::ServerAPI* server, int id_client, char* command,
 	responsePacketForDll(response, response_packet);
 }
 
+ADDAPI void sendTypeA(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeA(id_client, command);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void sendTypeB(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeB(id_client, command);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void sendTypeF(server::ServerAPI* server, int id_client, char* command, ResponseDLL& response_packet) {
+	ResponsePacket response = server->sendTypeF(id_client, command);
+	responsePacketForDll(response, response_packet);
+}
+
 ADDAPI void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->restartTarget(id_client);
 	responsePacketForDll(response, response_packet);
@@ -69,6 +84,26 @@ ADDAPI void restartTarget(server::ServerAPI* server, int id_client, ResponseDLL&
 
 ADDAPI void stopClient(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
 	ResponsePacket response = server->stopClient(id_client);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void coldReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+	ResponsePacket response = server->coldReset(id_client);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void warmReset(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+	ResponsePacket response = server->warmReset(id_client);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void powerOFFField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+	ResponsePacket response = server->powerOFFField(id_client);
+	responsePacketForDll(response, response_packet);
+}
+
+ADDAPI void powerONField(server::ServerAPI* server, int id_client, ResponseDLL& response_packet) {
+	ResponsePacket response = server->powerONField(id_client);
 	responsePacketForDll(response, response_packet);
 }
 

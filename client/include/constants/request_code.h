@@ -23,7 +23,20 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 namespace client {
 
 enum RequestCode {
-	REQ_CONNECT = 0, REQ_DIAG, REQ_DISCONNECT, REQ_ECHO, REQ_INIT, REQ_RESTART, REQ_COMMAND
+	REQ_CONNECT = 0,
+	REQ_DIAG,
+	REQ_DISCONNECT,
+	REQ_ECHO,
+	REQ_INIT,
+	REQ_RESTART,
+	REQ_COMMAND,
+	REQ_COMMAND_A,
+	REQ_COMMAND_B,
+	REQ_COMMAND_F,
+	REQ_COLD_RESET,
+	REQ_WARM_RESET,
+	REQ_POWER_OFF_FIELD,
+	REQ_POWER_ON_FIELD
 };
 
 /**

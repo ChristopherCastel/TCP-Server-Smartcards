@@ -85,6 +85,30 @@ public:
 	ResponsePacket sendCommand(int id_client, std::string command);
 
 	/**
+	 * sendTypeA - send an APDU command over RF Type A
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	virtual ResponsePacket sendTypeA(int id_client, std::string command);
+
+	/**
+	 * sendTypeB - send an APDU command over RF Type B
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	ResponsePacket sendTypeB(int id_client, std::string command);
+
+	/**
+	 * sendTypeF - send an APDU command over RF Type F
+	 * @param command the APDU command to be sent to the smartcard.
+	 * @param command_length the length of the given APDU command.
+	 * @return a ResponsePacket struct containing either the smartcard's response or error codes and error descriptions in case of error.
+	 */
+	ResponsePacket sendTypeF(int id_client, std::string command);
+
+	/**
 	 * restartTarget - restart the given target.
 	 * @param id_client the target to be restarted.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
@@ -97,6 +121,29 @@ public:
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
 	ResponsePacket stopClient(int id_client);
+
+	/**
+	 * coldReset - perform power off power on and return atr in the response structure.
+	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
+	 */
+	ResponsePacket coldReset(int id_client);
+
+	/**
+	 * coldReset - perform the reset without power switch and return atr in the response structure.
+	 * @return a ResponsePacket struct containing either the atr or the error codes (under 0) and error descriptions
+	 */
+	ResponsePacket warmReset(int id_client);
+
+	/**
+	 * powerOFFField - set the field OFF
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket powerOFFField(int id_client);
+	/**
+	 * powerONField - set the field ON
+ 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
+	 */
+	ResponsePacket powerONField(int id_client);
 
 	/**
 	 * stopServer - stop the server and all its clients and their underlying layers.

@@ -121,6 +121,21 @@ ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_
 	return response;
 }
 
+ResponsePacket TerminalPCSC::sendTypeA(unsigned char command[],  unsigned long int command_length) {
+	ResponsePacket response;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::sendTypeB(unsigned char command[],  unsigned long int command_length) {
+	ResponsePacket response;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::sendTypeF(unsigned char command[],  unsigned long int command_length) {
+	ResponsePacket response;
+	return response;
+}
+
 ResponsePacket TerminalPCSC::isAlive() {
 	unsigned char command[] = { 0x00, 0x00, 0x00, 0x00 };
 	return sendCommand(command, sizeof(command));
@@ -221,6 +236,26 @@ ResponsePacket TerminalPCSC::restart() {
 		break;
 	}
 
+	return response;
+}
+
+ResponsePacket TerminalPCSC::coldReset() {
+	ResponsePacket response;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::warmReset() {
+	ResponsePacket response;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::powerOFFField() {
+	ResponsePacket response;
+	return response;
+}
+
+ResponsePacket TerminalPCSC::powerONField() {
+	ResponsePacket response;
 	return response;
 }
 
