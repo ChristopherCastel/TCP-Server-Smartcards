@@ -192,7 +192,7 @@ ResponsePacket ClientEngine::disconnectClient() {
 	client_socket = INVALID_SOCKET;
 	WSACleanup();
 	ResponsePacket response = terminal->disconnect();
-	notifyConnectionLost("End of connection");
+	if (notifyConnectionLost != 0) notifyConnectionLost("End of connection");
 	LOG_INFO << "Client disconnected successfully";
 	return response;
 }
@@ -208,7 +208,7 @@ ResponsePacket ClientEngine::waitingRequests() {
 		int retval = recv(client_socket, recvbuf, recvbuflen, 0); // recv json request
 		if (retval > 0) {
 			recvbuf[retval] = '\0';
-			notifyRequestReceived(recvbuf);
+			if (notifyRequestReceived != 0) notifyRequestReceived(recvbuf);
 			LOG_INFO << "Data received from server: " << recvbuf;
 			std::async(std::launch::async, &ClientEngine::handleRequest, this, client_socket, recvbuf);
 		} else if (retval < 0) {
@@ -245,7 +245,7 @@ ResponsePacket ClientEngine::handleRequest(SOCKET socket, std::string request) {
 
 	std::string to_send = response.dump();
 	int retval = send(socket, to_send.c_str(), strlen(to_send.c_str()), 0);
-	notifyResponseSent(to_send.c_str());
+	if (notifyResponseSent != 0) notifyResponseSent(to_send.c_str());
 	if (retval == SOCKET_ERROR) {
 		LOG_DEBUG << "Failed to send response to server "
 				  << "[socket:" << socket << "][buffer:" << to_send.c_str() << "][size:" << strlen(to_send.c_str()) << "][flags:" << NULL << "]";

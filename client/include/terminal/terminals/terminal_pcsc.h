@@ -36,7 +36,6 @@ private:
 	DWORD dwReaders, dwActiveProtocol, dwRecvLength;
 	SCARD_IO_REQUEST pioSendPci;
 	BYTE pbRecvBuffer[DEFAULT_BUFLEN];
-	std::map<int, LPCSTR> available_readers;
 public:
 	TerminalPCSC() {};
 	~TerminalPCSC();

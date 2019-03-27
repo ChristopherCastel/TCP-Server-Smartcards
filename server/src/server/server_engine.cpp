@@ -200,7 +200,7 @@ ResponsePacket ServerEngine::connectionHandshake(SOCKET client_socket) {
 		ClientData* client = new ClientData(client_socket, ++next_client_id, recvbuf);
 		clients.insert(std::make_pair(client->getId(), client));
 		LOG_INFO << "Client connected [id:" << client->getId() << "][name:" << client->getName() << "]";
-		notifyConnectionAccepted(client->getId(), client->getName().c_str());
+		if (notifyConnectionAccepted != 0) notifyConnectionAccepted(client->getId(), client->getName().c_str());
 		ResponsePacket response_packet;
 		return response_packet;
 	} else {
@@ -255,7 +255,7 @@ ResponsePacket ServerEngine::asyncRequest(SOCKET client_socket, std::string to_s
 	retval = recv(client_socket, recvbuf, DEFAULT_BUFLEN, 0);
 	if (retval == SOCKET_ERROR) {
 		if (WSAGetLastError() == WSAETIMEDOUT) {
-			ResponsePacket response_packet = { .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
+			ResponsePacket response_packet = { .response = "KO", .err_server_code = ERR_TIMEOUT, .err_server_description = "Request time elapsed" };
 			return response_packet;
 		} else {
 			LOG_DEBUG << "Failed to receive data from client "

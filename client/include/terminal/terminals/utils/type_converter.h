@@ -34,7 +34,6 @@ namespace utils {
  * @return the unsigned char* data.
  */
 inline unsigned char* stringToUnsignedChar(std::string data, unsigned long int* length) {
-	LOG_ERROR << "DATA = " << data;
 	data.erase(remove_if(data.begin(), data.end(), isspace), data.end()); // remove spaces
 
 	std::stringstream ss;
@@ -45,8 +44,6 @@ inline unsigned char* stringToUnsignedChar(std::string data, unsigned long int* 
 		ss << data[i];
 	}
 	data = ss.str();
-	LOG_ERROR << "DATA = " << data;
-
 
 	std::istringstream hex_chars_stream(data);
 	std::vector<unsigned char> bytes;

@@ -70,7 +70,6 @@ ResponsePacket TerminalPCSC::loadAndListReaders() {
 	while ('\0' != *pReader) {
 		LOG_DEBUG << "Loaded reader: " << pReader;
 		list_readers += std::to_string(i) + "|" + std::string((const char*) pReader) + "|";
-		available_readers.insert(std::make_pair(i, pReader));
 		pReader = pReader + strlen((const char*) pReader) + 1;
 		i++;
 	}

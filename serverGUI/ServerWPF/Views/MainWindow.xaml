@@ -82,9 +82,8 @@
         <Button Command="{Binding SendCommandClient}" Content="Send command" HorizontalAlignment="Left" Margin="170,24,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Height="20" Grid.Column="1"/>
         <Button Command="{Binding EchoClient}" Content="Is alive ?" HorizontalAlignment="Left" Margin="5,53,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
         <Button Command="{Binding DiagnoseClient}" Content="Diagnose" HorizontalAlignment="Left" Margin="5,83,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
-        <Button Command="{Binding RestartClient}" Content="Restart" HorizontalAlignment="Left" Margin="5,112,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
         <Button Command="{Binding StopClient}" Content="Disconnect" HorizontalAlignment="Left" Margin="5,142,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
-        <Button Command="{Binding RestartTarget}" Content="Restart target" HorizontalAlignment="Left" Margin="170,53,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
+        <Button Command="{Binding RestartTarget}" Content="Restart target" HorizontalAlignment="Left" Margin="5,112,0,0" Grid.Row="4" VerticalAlignment="Top" Width="105" Grid.Column="1"/>
 
         <Label Margin="6,0,6,0" Content="Resquests/responses" Grid.Row="5" FontWeight="Bold"/>
         <DataGrid ScrollViewer.CanContentScroll="True" 
