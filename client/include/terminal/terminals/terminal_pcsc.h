@@ -42,7 +42,7 @@ public:
 	~TerminalPCSC();
 	ResponsePacket init();
 	ResponsePacket loadAndListReaders();
-	ResponsePacket connect(int key);
+	ResponsePacket connect(const char* reader);
 	ResponsePacket sendCommand(unsigned char command[], unsigned long int command_length);
 	ResponsePacket sendTypeA(unsigned char command[],  unsigned long int command_length);
 	ResponsePacket sendTypeB(unsigned char command[],  unsigned long int command_length);

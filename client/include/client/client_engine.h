@@ -74,7 +74,7 @@ public:
 	 * @param terminal_key the key corresponding to a reader.
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	ResponsePacket connectClient(int terminal_key, const char* ip, const char* port);
+	ResponsePacket connectClient(const char* reader, const char* ip, const char* port);
 
 	/**
 	 * disconnectClient - disconnect the cliet from the server and disconnect the terminal.

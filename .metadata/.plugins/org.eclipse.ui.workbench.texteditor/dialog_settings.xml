@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item value="729" key="DIALOG_X_ORIGIN"/>
+		<item value="463" key="DIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="Network error on re" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="network error on re"/>
+			<item value="Network "/>
 			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+)+/"/>
 			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+){2}*/"/>
 			<item value="/\*+[^*]*\*+(?:[^/*][^*]*\*+)*/"/>
@@ -21,8 +27,6 @@
 			<item value="peer"/>
 			<item value="reset b"/>
 			<item value="reset"/>
-			<item value="timeout"/>
-			<item value="data re"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

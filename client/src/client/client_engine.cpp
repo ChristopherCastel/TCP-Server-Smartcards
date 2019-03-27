@@ -37,6 +37,7 @@ https://github.com/GlobalPlatform/SE-test-IP-connector/blob/master/Charter%20and
 #include "nlohmann/json.hpp"
 #include "plog/include/plog/Log.h"
 #include "plog/include/plog/Appenders/ColorConsoleAppender.h"
+#include "plog/include/plog/Appenders/RollingFileAppender.h"
 
 #include "client/client_engine.h"
 #include "config/config_wrapper.h"
@@ -61,10 +62,11 @@ ResponsePacket ClientEngine::initClient(std::string path, FlyweightTerminalFacto
 	std::string log_path = config.getValue("log_path");
 	std::string log_level = config.getValue("log_level", "info");
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-	if (log_level.compare("debug") == 0) {
-		plog::init(plog::debug, log_path.c_str()).addAppender(&consoleAppender);
+
+	if (log_level.compare("debug") == 0) {;
+		plog::init(plog::debug, log_path.c_str(), 1000, 5).addAppender(&consoleAppender);
 	} else {
-		plog::init(plog::info, log_path.c_str()).addAppender(&consoleAppender);
+		plog::init(plog::info, log_path.c_str(), 1000, 5).addAppender(&consoleAppender);
 	}
 
 	LOG_INFO << "Client ready to be initialized";
@@ -91,7 +93,7 @@ ResponsePacket ClientEngine::loadAndListReaders() {
 	return terminal->loadAndListReaders();
 }
 
-ResponsePacket ClientEngine::connectClient(int terminal_key, const char* ip, const char* port) {
+ResponsePacket ClientEngine::connectClient(const char* reader, const char* ip, const char* port) {
 	ResponsePacket response;
 	if (!initialized.load()) {
 		ResponsePacket response_packet = { .response = "KO", .err_client_code = ERR_CLIENT_NOT_INITIALIZED, .err_client_description = "Client must be initialized correctly" };
@@ -103,7 +105,7 @@ ResponsePacket ClientEngine::connectClient(int terminal_key, const char* ip, con
 		return response_packet;
 	}
 
-	response = terminal->connect(terminal_key);
+	response = terminal->connect(reader);
 	if (response.err_card_code < 0 || response.err_terminal_code < 0) {
 		return response;
 	}

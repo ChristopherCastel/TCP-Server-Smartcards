@@ -44,10 +44,10 @@ public:
 
 	/**
 	 * connect - connect to the given reader.
-	 * @param key the key corresponding to a reader.
+	 * @param reader
 	 * @return a ResponsePacket struct containing possible error codes (under 0) and error descriptions.
 	 */
-	virtual ResponsePacket connect(int key) = 0;
+	virtual ResponsePacket connect(const char* reader) = 0;
 
 	/**
 	 * sendCommand - send an APDU command to the terminal.

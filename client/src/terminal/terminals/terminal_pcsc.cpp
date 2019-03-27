@@ -53,6 +53,10 @@ ResponsePacket TerminalPCSC::loadAndListReaders() {
 	ResponsePacket response;
 	LONG resp;
 
+	if (SCardFreeMemory(hContext, mszReaders) != SCARD_S_SUCCESS) {
+		LOG_DEBUG << "Failed to call SCardFreeMemory() " << "[card:" << hCard << "][mszReaders:" << mszReaders << "]";
+	}
+
 	dwReaders = SCARD_AUTOALLOCATE;
 	if ((resp = SCardListReaders(hContext, NULL, (LPTSTR) &mszReaders, &dwReaders)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardListReaders() [error:" << errorToString(resp) << "]"
@@ -76,16 +80,15 @@ ResponsePacket TerminalPCSC::loadAndListReaders() {
 	return response;
 }
 
-ResponsePacket TerminalPCSC::connect(int key) {
+ResponsePacket TerminalPCSC::connect(const char* reader) {
 	ResponsePacket response;
 	LONG resp;
 
-	LPCSTR szReader = available_readers.at(key);
-	LOG_INFO << "Trying to connect: " << szReader;
+	LOG_INFO << "Trying to connect: " << reader;
 
-	if ((resp = SCardConnect(hContext, szReader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol)) != SCARD_S_SUCCESS) {
+	if ((resp = SCardConnect(hContext, reader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCard, &dwActiveProtocol)) != SCARD_S_SUCCESS) {
 		LOG_DEBUG << "Failed to call SCardConnect() " << "[error:" << errorToString(resp) << "]"
-				  << "[hContext:" << hContext << "][szReader:" << szReader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
+				  << "[hContext:" << hContext << "][szReader:" << reader << "][dwShareMode:" << SCARD_SHARE_SHARED << "]"
 				  << "[dwPreferredProtocols:" << 0 << "][hCard:" << hCard << "][dwActiveProtocol:" << dwActiveProtocol << "]";
 		return handleErrorResponse("Failed to connect", resp);
 	}
@@ -100,7 +103,7 @@ ResponsePacket TerminalPCSC::connect(int key) {
 		break;
 	}
 
-	LOG_DEBUG << "Reader connected: " << szReader;
+	LOG_DEBUG << "Reader connected: " << reader;
 	return response;
 }
 
@@ -115,7 +118,25 @@ ResponsePacket TerminalPCSC::sendCommand(unsigned char command[], DWORD command_
 				  << "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
 		return handleErrorResponse("Failed to transmit", resp);
 	}
+
 	std::string responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
+
+	// process get response if required
+	std::string get_response = "00 C0 00 00";
+	std::string sw1 = responseAPDU.substr(0, responseAPDU.find(" "));
+	std::string sw2 = responseAPDU.substr(3);
+	if (sw1.compare("61") == 0) {
+		get_response.append(sw2);
+		unsigned long int length = 0;
+		unsigned char* command_get_response = utils::stringToUnsignedChar(get_response, &length);
+		dwRecvLength = sizeof(pbRecvBuffer);
+		if ((resp = SCardTransmit(hCard, &pioSendPci, command_get_response, length, NULL, pbRecvBuffer, &dwRecvLength)) != SCARD_S_SUCCESS) {
+			LOG_DEBUG << "Failed to call SCardTransmit() [error:" << errorToString(resp) << "]" << "[card:" << hCard << "][pbSendBuffer:" << command << "][cbSendLength:" << command_length << "]"
+					<< "[recvbuffer:" << pbRecvBuffer << "][recvlength:" << dwRecvLength << "]";
+			return handleErrorResponse("Failed to transmit", resp);
+		}
+		responseAPDU =  utils::unsignedCharToString(pbRecvBuffer, dwRecvLength);
+	}
 
 	ResponsePacket response = { .response = responseAPDU };
 	return response;

@@ -33,8 +33,8 @@ ResponsePacket ClientAPI::initClient(std::string path, FlyweightTerminalFactory 
 	return engine->initClient(path, available_terminals, available_requests);
 }
 
-ResponsePacket ClientAPI::connectClient(int terminal_key, const char* ip, const char* port) {
-	return engine->connectClient(terminal_key, ip, port);
+ResponsePacket ClientAPI::connectClient(const char* reader, const char* ip, const char* port) {
+	return engine->connectClient(reader, ip, port);
 }
 
 ResponsePacket ClientAPI::disconnectClient() {

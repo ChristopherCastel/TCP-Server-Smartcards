@@ -80,8 +80,8 @@ ADDAPI void loadAndListReaders(ClientAPI* client, ResponseDLL& response_packet_d
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 
-ADDAPI void connectClient(client::ClientAPI* client, int key, const char* ip, const char* port, ResponseDLL& response_packet_dll) {
-	ResponsePacket response_packet = client->connectClient(key, ip, port);
+ADDAPI void connectClient(client::ClientAPI* client, const char* reader, const char* ip, const char* port, ResponseDLL& response_packet_dll) {
+	ResponsePacket response_packet = client->connectClient(reader, ip, port);
 	responsePacketForDll(response_packet, response_packet_dll);
 }
 

@@ -74,7 +74,11 @@ inline std::string unsignedCharToString(unsigned char* hex, unsigned long int le
 	std::string hexString;
 	char buffer[length];
 	for (unsigned long int i = 0; i < length; i++) {
-		sprintf(buffer, "%02X ", hex[i]);
+		if (i == length - 1) {
+			sprintf(buffer, "%02X", hex[i]);
+		} else {
+			sprintf(buffer, "%02X ", hex[i]);
+		}
 		hexString.append(buffer);
 	}
 	return hexString;
